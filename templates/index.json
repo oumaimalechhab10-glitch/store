@@ -1,0 +1,177 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "focal_point": "center center",
+        "height": 88,
+        "alignment": "editorial",
+        "eyebrow": "",
+        "title": "",
+        "text": "",
+        "cta_label": "",
+        "cta2_label": "",
+        "cta_url": "/products/parure-toi-4-bagues",
+        "cta2_whatsapp": false
+      }
+    },
+    "usp": {
+      "type": "usp-bar",
+      "blocks": {
+        "u1": {
+          "type": "item",
+          "settings": {
+            "icon": "truck",
+            "title": "",
+            "text": ""
+          }
+        },
+        "u2": {
+          "type": "item",
+          "settings": {
+            "icon": "cash",
+            "title": "",
+            "text": ""
+          }
+        },
+        "u4": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "title": "",
+            "text": ""
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u4"
+      ],
+      "settings": {}
+    },
+    "featured": {
+      "type": "featured-products",
+      "settings": {
+        "eyebrow": "",
+        "title": "",
+        "subtitle": "",
+        "products_to_show": 1,
+        "show_tabs": false,
+        "cta_label": "",
+        "cta_url": "/products/parure-toi-4-bagues"
+      }
+    },
+    "mosaic": {
+      "type": "editorial-mosaic",
+      "blocks": {
+        "t1": {
+          "type": "tile",
+          "settings": {
+            "size": "tall",
+            "eyebrow": "",
+            "title": "",
+            "cta": "",
+            "link": "/products/parure-toi-4-bagues"
+          }
+        },
+        "t2": {
+          "type": "tile",
+          "settings": {
+            "size": "square",
+            "eyebrow": "",
+            "title": "",
+            "cta": "",
+            "link": "/products/parure-toi-4-bagues"
+          }
+        },
+        "t3": {
+          "type": "tile",
+          "settings": {
+            "size": "square",
+            "eyebrow": "",
+            "title": "",
+            "cta": "",
+            "link": "/products/parure-toi-4-bagues"
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ],
+      "settings": {
+        "title": ""
+      }
+    },
+    "marquee": {
+      "type": "marquee",
+      "settings": {
+        "text": "",
+        "speed": 34
+      }
+    },
+    "banner": {
+      "type": "banner",
+      "settings": {
+        "link": "/products/parure-toi-4-bagues",
+        "title": "",
+        "ratio": "wide",
+        "focal_point": "center center"
+      }
+    },
+    "gallery": {
+      "type": "gallery",
+      "settings": {
+        "title": "",
+        "link": "/products/parure-toi-4-bagues"
+      },
+      "blocks": {
+        "g1": {
+          "type": "photo",
+          "settings": {
+            "alt": "",
+            "link": ""
+          }
+        },
+        "g2": {
+          "type": "photo",
+          "settings": {
+            "alt": "",
+            "link": ""
+          }
+        },
+        "g3": {
+          "type": "photo",
+          "settings": {
+            "alt": "",
+            "link": ""
+          }
+        },
+        "g4": {
+          "type": "photo",
+          "settings": {
+            "alt": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "g1",
+        "g2",
+        "g3",
+        "g4"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "featured",
+    "marquee",
+    "mosaic",
+    "banner",
+    "usp",
+    "gallery"
+  ]
+}

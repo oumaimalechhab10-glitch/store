@@ -1,0 +1,47 @@
+{%- unless template.name == 'index' -%}
+<nav class="breadcrumbs" aria-label="{{ 'accessibility.breadcrumbs' | t }}">
+  <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a>
+  <span aria-hidden="true">/</span>
+
+  {%- case template.name -%}
+    {%- when 'product' -%}
+      {%- if collection -%}
+        <a href="{{ collection.url }}">{{ collection.title }}</a>
+        <span aria-hidden="true">/</span>
+      {%- endif -%}
+      <span aria-current="page">{{ product.title }}</span>
+
+    {%- when 'collection' -%}
+      {%- if current_tags -%}
+        <a href="{{ collection.url }}">{{ collection.title }}</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{{ current_tags | join: ', ' }}</span>
+      {%- else -%}
+        <span aria-current="page">{{ collection.title }}</span>
+      {%- endif -%}
+
+    {%- when 'page' -%}
+      <span aria-current="page">{{ page.title }}</span>
+
+    {%- when 'blog' -%}
+      <span aria-current="page">{{ blog.title }}</span>
+
+    {%- when 'article' -%}
+      <a href="{{ blog.url }}">{{ blog.title }}</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{{ article.title }}</span>
+
+    {%- when 'search' -%}
+      <span aria-current="page">{{ 'general.search' | t }}</span>
+
+    {%- when 'cart' -%}
+      <span aria-current="page">{{ 'cart.title' | t }}</span>
+
+    {%- when 'list-collections' -%}
+      <span aria-current="page">{{ 'collections.all' | t }}</span>
+
+    {%- else -%}
+      <span aria-current="page">{{ page_title }}</span>
+  {%- endcase -%}
+</nav>
+{%- endunless -%}

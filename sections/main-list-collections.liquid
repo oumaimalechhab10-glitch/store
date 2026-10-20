@@ -1,0 +1,84 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_text = section.settings.text
+  if d_text == blank
+    assign _t = ns | append: '.text' | t
+    unless _t contains 'translation missing'
+      assign d_text = _t
+    endunless
+  endif
+-%}
+<div class="shell">
+  {% render 'breadcrumbs' %}
+</div>
+
+<section class="section section--tight">
+  <div class="shell">
+    <div class="section-head center">
+      <p class="eyebrow">{{ 'collections.eyebrow' | t }}</p>
+      <h1 class="display-2" style="margin-top:12px">{{ page_title }}</h1>
+      {%- if d_text != blank -%}
+        <div class="rte lead" style="max-width:62ch;margin:16px auto 0">{{ d_text }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="product-grid product-grid--3">
+      {%- assign list = collections -%}
+      {%- if section.settings.source == 'selected' and section.settings.collection_list != blank -%}
+        {%- assign list = section.settings.collection_list -%}
+      {%- endif -%}
+
+      {%- for col in list -%}
+        {%- if col.products_count > 0 or section.settings.show_empty -%}
+          <a class="card card--collection reveal" href="{{ col.url }}">
+            <div class="card__media">
+              {%- if col.featured_image -%}
+                <img
+                  src="{{ col.featured_image | image_url: width: 800 }}"
+                  srcset="{{ col.featured_image | image_url: width: 400 }} 400w, {{ col.featured_image | image_url: width: 800 }} 800w"
+                  sizes="(max-width: 767px) 100vw, 33vw"
+                  alt="{{ col.title | escape }}"
+                  loading="lazy"
+                  width="{{ col.featured_image.width }}"
+                  height="{{ col.featured_image.height }}">
+              {%- else -%}
+                {{ 'collection-1' | placeholder_svg_tag }}
+              {%- endif -%}
+            </div>
+            <div class="card__body">
+              <h2 class="card__title">{{ col.title }}</h2>
+              <p class="small muted">{{ 'collections.product_count' | t: count: col.products_count }}</p>
+            </div>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collections list",
+  "class": "list-collections-section",
+  "settings": [
+    { "type": "richtext", "id": "text", "label": "Intro text" },
+    {
+      "type": "select",
+      "id": "source",
+      "label": "Collections shown",
+      "options": [
+        { "value": "all", "label": "All collections" },
+        { "value": "selected", "label": "Selected collections" }
+      ],
+      "default": "all"
+    },
+    { "type": "collection_list", "id": "collection_list", "label": "Selected collections", "limit": 12 },
+    { "type": "checkbox", "id": "show_empty", "label": "Show empty collections", "default": false }
+  ]
+}
+{% endschema %}

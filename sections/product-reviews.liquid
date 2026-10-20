@@ -1,0 +1,140 @@
+{%- comment -%}
+  Customer reviews.
+
+  A theme cannot store reviews: there is no database behind Liquid. Reviews
+  live either in a review app or in Shopify's standard review metafields
+  (`reviews.rating` and `reviews.rating_count`), which every serious review
+  app writes to. This section renders both and invents neither.
+
+  Three states, in order:
+    1. An app block is present  -> the app renders its own widget here.
+    2. No app, but the metafields hold a real score -> show the summary.
+    3. Neither -> show nothing on the storefront, and show the merchant a
+       short note in the theme editor explaining how to fill it.
+
+  State 3 is deliberate. A heading with "no reviews yet" under every product
+  on a new shop reads as an empty shop; worse would be inventing scores. The
+  merchant sees the explanation, the shopper sees nothing.
+
+  This section also carries id="reviews", which is the anchor the star rating
+  in the product page links to.
+{%- endcomment -%}
+
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+  if d_title == blank
+    assign d_title = 'reviews.heading' | t
+  endif
+
+  assign rating = product.metafields.reviews.rating.value
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+  assign has_summary = false
+  if rating != blank and rating_count > 0
+    assign has_summary = true
+  endif
+
+  assign has_app = false
+  if section.blocks.size > 0
+    assign has_app = true
+  endif
+-%}
+
+{%- if has_app or has_summary or request.design_mode -%}
+  <section id="reviews"
+           class="section reviews-section{% if section.settings.background == 'sand' %} section--sand{% endif %}"
+           aria-labelledby="reviews-title-{{ section.id }}">
+    <div class="shell">
+      <h2 id="reviews-title-{{ section.id }}" class="section-title center">{{ d_title }}</h2>
+
+      {%- if has_summary and section.settings.show_summary -%}
+        {%- assign score = rating.rating | times: 1.0 -%}
+        {%- assign scale = rating.scale_max | default: 5 -%}
+        <div class="reviews-summary"
+             aria-label="{{ 'reviews.aria' | t: score: score, scale: scale, count: rating_count }}">
+          <span class="reviews-summary__score" dir="ltr">{{ score | round: 1 }}</span>
+          <span class="rating__stars" aria-hidden="true">
+            {%- for i in (1..scale) -%}
+              <span class="rating__star{% if i <= score %} is-on{% endif %}">&#9733;</span>
+            {%- endfor -%}
+          </span>
+          <span class="reviews-summary__count">
+            {{- 'reviews.count' | t: count: rating_count -}}
+          </span>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%}
+        The review app renders here. Shopify injects app blocks the merchant
+        adds in the editor, so no app name is hardcoded.
+      {%- endcomment -%}
+      {%- for block in section.blocks -%}
+        <div class="reviews-app" {{ block.shopify_attributes }}>
+          {%- render block -%}
+        </div>
+      {%- endfor -%}
+
+      {%- if request.design_mode and has_app == false and has_summary == false -%}
+        <p class="reviews-empty center small muted">
+          {{ 'reviews.none' | t }}
+        </p>
+        <p class="center small muted" style="margin-top:8px">
+          Theme editor only, not visible to shoppers. Add your review app with
+          "Add block" above, or publish reviews so Shopify fills the
+          reviews.rating metafield. Until then this section stays hidden.
+        </p>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Reviews",
+  "class": "reviews-section-wrapper",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "",
+      "info": "Leave empty to use the translated default for the active language."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_summary",
+      "label": "Show the average score",
+      "default": true,
+      "info": "Read from Shopify's reviews.rating metafield, which review apps fill in. Nothing is shown until there is a real score."
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "default": "white",
+      "options": [
+        { "value": "white", "label": "Ivory" },
+        { "value": "sand", "label": "Warm beige" }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "A theme cannot store reviews on its own. Install a review app and add it here with \"Add block\". With no app and no score, this section is hidden from shoppers so the page never shows an empty review area."
+    }
+  ],
+  "blocks": [{ "type": "@app" }],
+  "presets": [{ "name": "Reviews" }]
+}
+{% endschema %}

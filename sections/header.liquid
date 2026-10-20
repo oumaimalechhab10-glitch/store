@@ -1,0 +1,315 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign ns = 'defaults.chrome_' | append: section.id
+  assign d_baseline = section.settings.baseline
+  if d_baseline == blank
+    assign _t = ns | append: '.baseline' | t
+    unless _t contains 'translation missing'
+      assign d_baseline = _t
+    endunless
+  endif
+  assign d_highlight_text = section.settings.highlight_text
+  if d_highlight_text == blank
+    assign _t = ns | append: '.highlight_text' | t
+    unless _t contains 'translation missing'
+      assign d_highlight_text = _t
+    endunless
+  endif
+  assign d_search_suggestions = section.settings.search_suggestions
+  if d_search_suggestions == blank
+    assign _t = ns | append: '.search_suggestions' | t
+    unless _t contains 'translation missing'
+      assign d_search_suggestions = _t
+    endunless
+  endif
+-%}
+<header class="header" data-header>
+  <div class="shell header__inner">
+
+    <div class="header__left">
+      <button type="button" class="icon-btn" data-drawer-open="MenuDrawer" aria-label="{{ 'accessibility.open_menu' | t }}" style="margin-left:-8px">
+        {% render 'icon', icon: 'menu', size: 21 %}
+      </button>
+
+      <nav class="nav" aria-label="{{ 'accessibility.primary_navigation' | t }}">
+        {%- for link in section.settings.menu.links -%}
+          {%- assign mega_block = null -%}
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign bns = ns | append: '.' | append: forloop.index
+              assign db_image_caption = block.settings.image_caption
+              if db_image_caption == blank
+                assign _t = bns | append: '_image_caption' | t
+                unless _t contains 'translation missing'
+                  assign db_image_caption = _t
+                endunless
+              endif
+              assign db_menu_title = block.settings.menu_title
+              if db_menu_title == blank
+                assign _t = bns | append: '_menu_title' | t
+                unless _t contains 'translation missing'
+                  assign db_menu_title = _t
+                endunless
+              endif
+            -%}
+            {%- if db_menu_title != blank and db_menu_title == link.title -%}
+              {%- assign mega_block = block -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          {%- if mega_block -%}
+            <div class="nav__item nav__item--mega">
+              <a href="{{ link.url }}" class="nav__link">
+                {{ link.title }}
+                {% render 'icon', icon: 'chevron-down', size: 13 %}
+              </a>
+              <div class="nav__mega" {{ mega_block.shopify_attributes }}>
+                <div class="shell nav__mega-inner">
+                  {%- for child in link.links limit: 4 -%}
+                    <div>
+                      <h3>{{ child.title }}</h3>
+                      <ul>
+                        {%- if child.links.size > 0 -%}
+                          {%- for grandchild in child.links -%}
+                            <li><a href="{{ grandchild.url }}">{{ grandchild.title }}</a></li>
+                          {%- endfor -%}
+                        {%- else -%}
+                          <li><a href="{{ child.url }}">{{ 'general.view_all' | t }}</a></li>
+                        {%- endif -%}
+                      </ul>
+                    </div>
+                  {%- endfor -%}
+
+                  {%- if mega_block.settings.image -%}
+                    <a class="nav__mega-feature" href="{{ mega_block.settings.image_link | default: link.url }}">
+                      <img src="{{ mega_block.settings.image | image_url: width: 600 }}" alt="{{ mega_block.settings.image_caption | escape }}" loading="lazy" width="600" height="450">
+                      {%- if mega_block.settings.image_caption != blank -%}
+                        <figcaption>{{ mega_block.settings.image_caption }}</figcaption>
+                      {%- endif -%}
+                    </a>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+
+          {%- elsif link.links.size > 0 -%}
+            <div class="nav__item">
+              <a href="{{ link.url }}" class="nav__link">
+                {{ link.title }}
+                {% render 'icon', icon: 'chevron-down', size: 13 %}
+              </a>
+              <div class="nav__panel">
+                {%- for child in link.links -%}
+                  <a href="{{ child.url }}">{{ child.title }}</a>
+                {%- endfor -%}
+              </div>
+            </div>
+
+          {%- else -%}
+            {%- assign accent = false -%}
+            {%- if d_highlight_text != blank and link.title contains d_highlight_text -%}
+              {%- assign accent = true -%}
+            {%- endif -%}
+            <div class="nav__item">
+              <a href="{{ link.url }}" class="nav__link{% if accent %} nav__link--accent{% endif %}">{{ link.title }}</a>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </nav>
+    </div>
+
+    <a href="{{ routes.root_url }}" class="logo">
+      {%- if section.settings.logo -%}
+        <img src="{{ section.settings.logo | image_url: width: 420 }}" alt="{{ shop.name | escape }}" width="210" height="46">
+      {%- else -%}
+        <span class="logo__name">{{ shop.name }}</span>
+        {%- if d_baseline != blank -%}
+          <span class="logo__baseline">{{ d_baseline }}</span>
+        {%- endif -%}
+      {%- endif -%}
+    </a>
+
+    <div class="header__right">
+      {%- comment -%}
+        Language picker. Shopify's localization form is the only switcher that
+        keeps the shopper on the same page and lets Shopify serve translated
+        content; the markup below degrades to a plain form without JS.
+      {%- endcomment -%}
+      {%- if section.settings.show_language_picker and localization.available_languages.size > 1 -%}
+        <div class="lang" data-lang>
+          <button
+            type="button"
+            class="lang__btn"
+            data-lang-toggle
+            aria-expanded="false"
+            aria-haspopup="true"
+            aria-label="{{ 'general.change_language' | t }}">
+            {% render 'flag', code: localization.language.iso_code %}
+            <span class="lang__code">{{ localization.language.iso_code | upcase }}</span>
+            {% render 'icon', icon: 'chevron-down', size: 11 %}
+          </button>
+
+          {%- comment -%}
+            Each option is its own submit button carrying `language_code`, the
+            field name Shopify's /localization endpoint expects, so the
+            switcher works with JavaScript disabled. The form tag already emits
+            a `return_to` for the current URL — adding our own would override it
+            with a path that has lost its query string.
+          {%- endcomment -%}
+          {% form 'localization', class: 'lang__menu' %}
+            <ul>
+              {%- for language in localization.available_languages -%}
+                <li>
+                  <button
+                    type="submit"
+                    name="language_code"
+                    value="{{ language.iso_code }}"
+                    lang="{{ language.iso_code }}"
+                    class="lang__option{% if language.iso_code == localization.language.iso_code %} is-current{% endif %}"
+                    {% if language.iso_code == localization.language.iso_code %}aria-current="true"{% endif %}>
+                    {% render 'flag', code: language.iso_code %}
+                    <span>{{ language.endonym_name | capitalize }}</span>
+                  </button>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {% endform %}
+        </div>
+      {%- endif -%}
+
+      {%- if settings.show_scheme_toggle -%}
+        {%- comment -%} Light / dark switch. theme.js keeps the choice in localStorage. {%- endcomment -%}
+        <button
+          type="button"
+          class="icon-btn icon-btn--scheme"
+          data-scheme-toggle
+          aria-label="{{ 'general.toggle_scheme' | t }}"
+          title="{{ 'general.toggle_scheme' | t }}">
+          <span class="icon-btn__sun">{% render 'icon', icon: 'sun', size: 19 %}</span>
+          <span class="icon-btn__moon">{% render 'icon', icon: 'moon', size: 19 %}</span>
+        </button>
+      {%- endif -%}
+
+      <button type="button" class="icon-btn" data-search-open aria-label="{{ 'general.search' | t }}">
+        {% render 'icon', icon: 'search', size: 19 %}
+      </button>
+
+      {%- if section.settings.stores_page != blank -%}
+        <a href="{{ section.settings.stores_page }}" class="icon-btn icon-btn--desk" aria-label="{{ 'general.stores' | t }}">
+          {% render 'icon', icon: 'pin', size: 19 %}
+        </a>
+      {%- endif -%}
+
+      {%- if shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" class="icon-btn icon-btn--desk" aria-label="{{ 'customer.account' | t }}">
+          {% render 'icon', icon: 'user', size: 19 %}
+        </a>
+      {%- endif -%}
+
+      <a href="{{ routes.cart_url }}" class="icon-btn" data-cart-open aria-label="{{ 'cart.title' | t }}">
+        {% render 'icon', icon: 'cart', size: 19 %}
+        <span class="icon-btn__count" data-cart-bubble {% if cart.item_count == 0 %}hidden{% endif %}>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{%- comment -%} Search overlay {%- endcomment -%}
+<div class="search-panel" data-search-panel>
+  <div class="shell">
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-panel__form">
+      <input type="hidden" name="type" value="product">
+      <input
+        type="search"
+        name="q"
+        class="search-panel__input"
+        placeholder="{{ 'general.search_placeholder' | t }}"
+        aria-label="{{ 'general.search' | t }}"
+        autocomplete="off">
+      <button type="submit" class="icon-btn" aria-label="{{ 'general.search' | t }}">{% render 'icon', icon: 'search', size: 22 %}</button>
+      <button type="button" class="icon-btn" data-search-close aria-label="{{ 'accessibility.close' | t }}">{% render 'icon', icon: 'close', size: 22 %}</button>
+    </form>
+    {%- if d_search_suggestions != blank -%}
+      <p class="small muted" style="margin-top:16px">
+        {{ 'general.popular_searches' | t }} :
+        {%- assign terms = d_search_suggestions | split: ',' -%}
+        {%- for term in terms -%}
+          <a href="{{ routes.search_url }}?q={{ term | strip | url_encode }}" class="link-underline" style="margin-left:8px">{{ term | strip }}</a>
+        {%- endfor -%}
+      </p>
+    {%- endif -%}
+
+    <div class="search-panel__results" data-search-results></div>
+  </div>
+</div>
+
+{%- comment -%} Mobile menu drawer {%- endcomment -%}
+<aside class="drawer drawer--left" id="MenuDrawer" data-drawer aria-hidden="true">
+  <header class="drawer__head">
+    <span class="drawer__title">{{ 'general.menu' | t }}</span>
+    <button type="button" class="icon-btn" data-drawer-close aria-label="{{ 'accessibility.close' | t }}">
+      {% render 'icon', icon: 'close', size: 20 %}
+    </button>
+  </header>
+  <div class="drawer__body mobile-nav">
+    {%- for link in section.settings.menu.links -%}
+      {%- if link.links.size > 0 -%}
+        <details>
+          <summary>{{ link.title }} {% render 'icon', icon: 'chevron-down', size: 15 %}</summary>
+          <ul>
+            <li><a href="{{ link.url }}">{{ 'general.view_all' | t }}</a></li>
+            {%- for child in link.links -%}
+              {%- if child.links.size > 0 -%}
+                {%- for grandchild in child.links -%}
+                  <li><a href="{{ grandchild.url }}">{{ grandchild.title }}</a></li>
+                {%- endfor -%}
+              {%- else -%}
+                <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </details>
+      {%- else -%}
+        <a href="{{ link.url }}">{{ link.title }}</a>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- assign number = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' -%}
+    {%- if number != blank -%}
+      <a class="btn btn--wa btn--full" style="margin-top:24px" href="https://wa.me/{{ number }}" target="_blank" rel="noopener nofollow">
+        {% render 'icon', icon: 'whatsapp', size: 17 %} {{ 'whatsapp.contact_us' | t }}
+      </a>
+    {%- endif -%}
+  </div>
+</aside>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "header-section",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo image", "info": "Leave empty to use the shop name set in the serif typeface." },
+    { "type": "text", "id": "baseline", "label": "Baseline under the logo", "default": "" },
+    { "type": "link_list", "id": "menu", "label": "Menu", "default": "main-menu" },
+    { "type": "text", "id": "highlight_text", "label": "Highlight menu items containing", "info": "Matching links are shown in the accent colour, e.g. “Sale”.", "default": "" },
+    { "type": "url", "id": "stores_page", "label": "Store locator page" },
+    { "type": "checkbox", "id": "show_language_picker", "label": "Show the language picker", "default": true, "info": "Appears once you add a second language in Settings → Languages." },
+    { "type": "text", "id": "search_suggestions", "label": "Popular searches", "info": "Comma separated.", "default": "" },
+    { "type": "header", "content": "Mega menu" },
+    { "type": "paragraph", "content": "Add a Mega menu block and type the exact title of a top-level menu item to turn it into a 4-column panel with a photo." }
+  ],
+  "blocks": [
+    {
+      "type": "mega",
+      "name": "Mega menu",
+      "limit": 3,
+      "settings": [
+        { "type": "text", "id": "menu_title", "label": "Menu item title", "info": "Must match the navigation label exactly." },
+        { "type": "image_picker", "id": "image", "label": "Feature image" },
+        { "type": "text", "id": "image_caption", "label": "Feature caption" },
+        { "type": "url", "id": "image_link", "label": "Feature link" }
+      ]
+    }
+  ]
+}
+{% endschema %}

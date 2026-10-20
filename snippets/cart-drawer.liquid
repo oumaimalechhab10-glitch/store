@@ -1,0 +1,13 @@
+{%- comment -%} Slide-out cart. Re-rendered by theme.js from the Section Rendering API. {%- endcomment -%}
+<aside class="drawer drawer--right" id="CartDrawer" data-cart-drawer aria-hidden="true" aria-label="{{ 'cart.title' | t }}">
+  <header class="drawer__head">
+    <h2 class="drawer__title">{{ 'cart.title' | t }} <span data-cart-count>({{ cart.item_count }})</span></h2>
+    <button type="button" class="icon-btn" data-drawer-close aria-label="{{ 'accessibility.close' | t }}">
+      {% render 'icon', icon: 'close', size: 20 %}
+    </button>
+  </header>
+
+  <div class="drawer__body" data-cart-drawer-body>
+    {% render 'cart-drawer-contents' %}
+  </div>
+</aside>

@@ -1,0 +1,53 @@
+{
+  "sections": {
+    "intro": {
+      "type": "main-page",
+      "settings": {
+        "eyebrow": "",
+        "narrow": true,
+        "align": "center"
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "settings": {
+        "eyebrow": "",
+        "title": "",
+        "text": ""
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": {
+          "type": "qa",
+          "settings": {
+            "question": "",
+            "answer": ""
+          }
+        },
+        "q2": {
+          "type": "qa",
+          "settings": {
+            "question": "",
+            "answer": ""
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2"
+      ],
+      "settings": {
+        "title": "",
+        "show_help": false,
+        "open_first": false
+      }
+    }
+  },
+  "order": [
+    "intro",
+    "form",
+    "faq"
+  ]
+}

@@ -1,0 +1,493 @@
+{
+  "general": {
+    "home": "Accueil",
+    "search": "Rechercher",
+    "search_placeholder": "Colliers, bagues, bracelets…",
+    "search_results_count": {
+      "one": "{{ count }} résultat pour « {{ terms }} »",
+      "other": "{{ count }} résultats pour « {{ terms }} »"
+    },
+    "search_no_results": "Aucun résultat pour « {{ terms }} »",
+    "search_no_results_text": "Vérifiez l’orthographe ou explorez la boutique. Notre équipe répond aussi sur WhatsApp.",
+    "popular_searches": "Recherches fréquentes",
+    "menu": "Menu",
+    "stores": "Points de vente",
+    "view_all": "Voir tout",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "morocco": "Maroc",
+    "morocco_only": "Livraison au Maroc uniquement",
+    "error_404": "Erreur 404",
+    "not_found_title": "Cette page n’existe plus",
+    "not_found_text": "Le lien est peut-être erroné, ou la pièce a rejoint nos archives.",
+    "meta": {
+      "tags": "Filtré par {{ tags }}",
+      "page": "Page {{ page }}"
+    },
+    "change_language": "Changer de langue",
+    "toggle_scheme": "Basculer entre le mode clair et sombre",
+    "consent_title": "Préférences de mesure",
+    "consent_text": "Nous utilisons des outils de mesure tiers pour comprendre ce qui intéresse nos visiteurs. Vous pouvez refuser : le site fonctionne exactement de la même façon.",
+    "consent_accept": "Accepter",
+    "consent_decline": "Refuser",
+    "coming_soon": "Bientôt",
+    "not_found": "Page introuvable"
+  },
+  "accessibility": {
+    "skip_to_content": "Aller au contenu",
+    "close": "Fermer",
+    "open_menu": "Ouvrir le menu",
+    "primary_navigation": "Navigation principale",
+    "breadcrumbs": "Fil d’Ariane",
+    "pagination": "Pagination"
+  },
+  "customer": {
+    "account": "Mon compte"
+  },
+  "products": {
+    "sold_out": "Épuisé",
+    "in_stock": "En stock",
+    "unavailable": "Indisponible",
+    "add_to_cart": "Ajouter au panier",
+    "choose_options": "Choisir les options",
+    "new": "Nouveau",
+    "from_price": "À partir de {{ price }}",
+    "quantity": "Quantité",
+    "sku": "Réf.",
+    "reference": "Référence",
+    "material": "Matière",
+    "weight": "Poids",
+    "size_guide": "Guide des tailles",
+    "description": "Description",
+    "features": "Caractéristiques",
+    "care": "Entretien",
+    "delivery": "Livraison",
+    "delivery_value": "24 à 48h au Maroc",
+    "payment": "Paiement",
+    "payment_value": "À la livraison ou en ligne",
+    "ships_to": "Expédié vers",
+    "reassurance_delivery": "Livraison en 24-48h partout au Maroc",
+    "reassurance_cod": "Paiement à la livraison",
+    "reassurance_warranty": "Garantie {{ months }} mois",
+    "reassurance_returns": "Retours sous {{ days }} jours",
+    "browse_photos": {
+      "one": "1 photo",
+      "other": "{{ count }} photos, survolez pour les faire défiler"
+    },
+    "cta_note": "Paiement à la livraison · Échange sous {{ days }} jours",
+    "or": "ou commandez directement",
+    "buy_now": "Commander maintenant"
+  },
+  "collections": {
+    "all": "Toute la boutique",
+    "eyebrow": "Collection",
+    "product_count": {
+      "one": "{{ count }} pièce",
+      "other": "{{ count }} pièces"
+    },
+    "showing": {
+      "one": "{{ count }} pièce affichée",
+      "other": "{{ count }} pièces affichées"
+    },
+    "filters": "Filtrer",
+    "sort": "Trier par",
+    "apply": "Appliquer",
+    "clear": "Tout effacer",
+    "min": "Min",
+    "max": "Max",
+    "empty_title": "Aucune pièce ne correspond",
+    "empty_text": "Essayez de retirer un filtre, ou écrivez-nous sur WhatsApp : nous trouvons la pièce pour vous.",
+    "all_collections": "Collections",
+    "soon_title": "Bientôt disponible",
+    "soon_text": "Cette famille n’est pas encore en stock. Écrivez-nous sur WhatsApp et nous vous prévenons dès l’arrivage.",
+    "soon_cta": "Me prévenir sur WhatsApp",
+    "soon_message": "Bonjour, je souhaite être prévenue quand {{ family }} seront disponibles."
+  },
+  "cart": {
+    "title": "Panier",
+    "count": {
+      "one": "{{ count }} article",
+      "other": "{{ count }} articles"
+    },
+    "empty": "Votre panier est vide",
+    "empty_text": "La bague « Toi » n’attend que vous.",
+    "added": "Ajouté au panier",
+    "continue_shopping": "Continuer mes achats",
+    "subtotal": "Sous-total",
+    "shipping": "Livraison",
+    "total": "Total",
+    "free": "Offerte",
+    "checkout": "Commander en ligne",
+    "view_cart": "Voir le panier",
+    "remove": "Retirer",
+    "quantity": "Quantité",
+    "increase": "Augmenter la quantité",
+    "decrease": "Diminuer la quantité",
+    "note": "Instructions de livraison",
+    "note_placeholder": "Étage, repère, horaire préféré…",
+    "taxes_note": "Frais de livraison calculés à l’étape suivante. TVA incluse.",
+    "free_shipping_remaining_html": "Plus que {{ amount }} pour la livraison offerte",
+    "free_shipping_reached": "Livraison offerte débloquée",
+    "checkout_note": "Paiement sécurisé · Livraison 24-48h au Maroc"
+  },
+  "whatsapp": {
+    "contact_us": "Nous écrire sur WhatsApp",
+    "chat_now": "Démarrer la conversation",
+    "fab_message": "Bonjour {{ shop }}, j’ai une question sur vos bijoux.",
+    "question_message": "Bonjour, j’ai une question avant de commander.",
+    "store_message": "Bonjour, je souhaite réserver une pièce à la boutique de {{ city }}."
+  },
+  "stores": {
+    "addresses": "Adresses",
+    "click_collect": "Retrait en boutique",
+    "open": "Ouvert",
+    "book": "Réserver",
+    "directions": "Itinéraire"
+  },
+  "faq": {
+    "need_help": "Besoin d’aide ?",
+    "help_text": "Notre équipe répond en moins d’une heure, 7 jours sur 7, directement sur WhatsApp."
+  },
+  "newsletter": {
+    "placeholder": "Votre adresse e-mail",
+    "success": "Merci, votre inscription est confirmée."
+  },
+  "ai": {
+    "payment_accepted": "Paiement à la livraison (espèces) et paiement en ligne. Commande possible sur WhatsApp sans créer de compte. Livraison au Maroc uniquement."
+  },
+  "onboarding": {
+    "product_title": "Nom de la pièce"
+  },
+  "defaults": {
+    "404_main": {
+      "title": "Nos pièces les plus demandées"
+    },
+    "blog_main": {
+      "eyebrow": "Journal",
+      "empty_text": "Les premiers articles arrivent bientôt."
+    },
+    "collection_discover": {
+      "title": "Continuer la découverte"
+    },
+    "index_hero": {
+      "eyebrow": "La pièce de la saison",
+      "title": "La bague « Toi », lot de 4",
+      "text": "Quatre bagues coordonnées dans un même écrin : un solitaire ovale, une couronne sertie, un anneau fin et un jonc lisse. À porter ensemble ou séparément.",
+      "cta_label": "Découvrir la parure",
+      "cta2_label": ""
+    },
+    "index_usp": {
+      "1_title": "Livraison offerte",
+      "1_text": "Partout au Maroc",
+      "2_title": "Paiement à la livraison",
+      "2_text": "Vous vérifiez avant",
+      "3_title": "Retour sous 14 jours",
+      "3_text": "Pièce non portée"
+    },
+    "index_featured": {
+      "eyebrow": "",
+      "title": "Nos bijoux",
+      "subtitle": "",
+      "cta_label": ""
+    },
+    "index_mosaic": {
+      "1_eyebrow": "",
+      "1_title": "Ensemble",
+      "1_cta": "Découvrir",
+      "2_eyebrow": "",
+      "2_title": "Ou séparément",
+      "2_cta": "Découvrir",
+      "3_eyebrow": "",
+      "3_title": "Prête à offrir",
+      "3_cta": "Découvrir"
+    },
+    "list_collections_main": {
+      "text": "<p>Toutes nos familles de pièces, du solitaire à la montre chronographe.</p>"
+    },
+    "page_about_intro": {
+      "eyebrow": "La maison"
+    },
+    "page_about_split": {
+      "eyebrow": "Notre histoire",
+      "title": "Née d’un atelier de Casablanca",
+      "text": "<p>EmmaLux est née de l’idée qu’un beau bijou ne doit pas dormir dans un coffre. Nous dessinons des pièces à porter tous les jours, au prix juste.</p>",
+      "1_label": "Fondée à Casablanca",
+      "2_label": "Boutiques",
+      "3_label": "Clientes",
+      "cta_label": "Nos matières",
+      "4_label": "Boutiques",
+      "5_label": "Boutiques",
+      "6_label": "Boutiques",
+      "7_label": "Boutiques",
+      "8_label": "Boutiques"
+    },
+    "page_about_quote": {
+      "quote": "Un bijou ne doit pas être réservé aux grandes occasions.",
+      "author": "Emma, fondatrice"
+    },
+    "page_contact_intro": {
+      "eyebrow": "Service client"
+    },
+    "page_contact_form": {
+      "eyebrow": "Contact",
+      "title": "Écrivez-nous",
+      "text": "<p>Une question sur une pièce, une taille ou une livraison ? Nous répondons sous 24 heures, et en moins d’une heure sur WhatsApp.</p>",
+      "label_name": "Nom",
+      "label_phone": "Téléphone",
+      "label_email": "E-mail",
+      "label_message": "Message",
+      "button_label": "Envoyer",
+      "success_message": "Merci, votre message est bien reçu. Nous revenons vers vous très vite.",
+      "privacy_note": "Vos données servent uniquement à répondre à votre demande.",
+      "whatsapp_note": "Pour une réponse immédiate, écrivez-nous directement. Nous répondons 7 jours sur 7."
+    },
+    "page_contact_faq": {
+      "title": "Avant de nous écrire",
+      "1_question": "Combien de temps pour une réponse ?",
+      "1_answer": "<p>Moins d’une heure sur WhatsApp, 24 heures par e-mail, sept jours sur sept.</p>",
+      "2_question": "Puis-je modifier une commande déjà passée ?",
+      "2_answer": "<p>Oui, tant qu’elle n’est pas expédiée. Écrivez-nous avec votre numéro de commande.</p>",
+      "3_question": "Faut-il créer un compte pour commander ?",
+      "4_question": "Faut-il créer un compte pour commander ?",
+      "5_question": "Faut-il créer un compte pour commander ?",
+      "6_question": "Faut-il créer un compte pour commander ?",
+      "7_question": "Faut-il créer un compte pour commander ?",
+      "8_question": "Faut-il créer un compte pour commander ?",
+      "3_answer": "<p>Non. Vous remplissez le formulaire de commande ou vous passez par le paiement en ligne, sans créer de compte.</p>",
+      "4_answer": "<p>Non. Vous remplissez le formulaire de commande ou vous passez par le paiement en ligne, sans créer de compte.</p>",
+      "5_answer": "<p>Non. Vous remplissez le formulaire de commande ou vous passez par le paiement en ligne, sans créer de compte.</p>",
+      "6_answer": "<p>Non. Vous remplissez le formulaire de commande ou vous passez par le paiement en ligne, sans créer de compte.</p>",
+      "7_answer": "<p>Non. Vous remplissez le formulaire de commande ou vous passez par le paiement en ligne, sans créer de compte.</p>",
+      "8_answer": "<p>Non. Vous remplissez le formulaire de commande ou vous passez par le paiement en ligne, sans créer de compte.</p>"
+    },
+    "page_faq_intro": {
+      "eyebrow": "Aide"
+    },
+    "page_faq_faq": {
+      "title": "Toutes les réponses",
+      "1_question": "Faut-il créer un compte pour commander ?",
+      "1_answer": "<p>Non. Vous remplissez le formulaire de commande (nom, téléphone, ville, adresse) ou vous passez par le paiement en ligne. Aucun compte n’est nécessaire.</p>",
+      "2_question": "Quels sont les délais de livraison ?",
+      "2_answer": "<p>24 à 48 heures dans les grandes villes, 48 à 72 heures ailleurs au Maroc. Nous livrons uniquement au Maroc.</p>",
+      "3_question": "Puis-je payer à la livraison ?",
+      "3_answer": "<p>Oui, en espèces au livreur, partout au Maroc. Le paiement en ligne reste disponible au checkout.</p>",
+      "4_question": "Comment connaître ma taille de bague ?",
+      "4_answer": "<p>Mesurez le tour de doigt avec un fil, puis reportez la longueur sur notre guide des tailles. En cas de doute, envoyez-nous la mesure sur WhatsApp.</p>",
+      "5_question": "Les bijoux passent-ils sous l’eau ?",
+      "5_answer": "<p>Oui. L’acier 316L doré trois microns supporte la douche, la mer et la transpiration. Évitez simplement les parfums en contact direct.</p>",
+      "6_question": "Comment faire un retour ?",
+      "6_answer": "<p>Écrivez-nous sous 14 jours. Nous organisons le retour, la pièce doit être non portée et dans son emballage d'origine.</p>",
+      "7_question": "Faut-il créer un compte pour commander ?",
+      "8_question": "Faut-il créer un compte pour commander ?",
+      "7_answer": "<p>Non. Vous remplissez le formulaire de commande ou vous passez par le paiement en ligne, sans créer de compte.</p>",
+      "8_answer": "<p>Non. Vous remplissez le formulaire de commande ou vous passez par le paiement en ligne, sans créer de compte.</p>"
+    },
+    "page_stores_intro": {
+      "eyebrow": "Points de vente"
+    },
+    "page_stores_stores": {
+      "eyebrow": "Nos adresses",
+      "title": "Six boutiques au Maroc",
+      "text": "<p>Réservez une pièce par WhatsApp et essayez-la en boutique sous deux heures.</p>",
+      "1_name": "EmmaLux Anfa",
+      "1_city": "Casablanca",
+      "1_address": "Boulevard d’Anfa, résidence Yasmine",
+      "1_hours": "Lun – Dim : 9h – 21h",
+      "2_name": "EmmaLux Agdal",
+      "2_city": "Rabat",
+      "2_address": "Avenue Fal Ould Oumeir",
+      "2_hours": "Lun – Dim : 9h – 21h",
+      "3_name": "EmmaLux Guéliz",
+      "3_city": "Marrakech",
+      "3_address": "Rue de la Liberté",
+      "3_hours": "Lun – Dim : 10h – 21h",
+      "4_name": "EmmaLux Malabata",
+      "4_city": "Tanger",
+      "4_address": "Avenue Mohammed VI",
+      "4_hours": "Lun – Dim : 10h – 21h",
+      "5_name": "EmmaLux Fès",
+      "5_city": "Fès",
+      "5_address": "Avenue Hassan II",
+      "5_hours": "Lun – Sam : 10h – 20h",
+      "6_name": "EmmaLux Founty",
+      "6_city": "Agadir",
+      "6_address": "Secteur Founty, baie des palmiers",
+      "6_hours": "Lun – Sam : 10h – 20h",
+      "cta_label": "Voir les adresses",
+      "7_name": "EmmaLux Casablanca",
+      "8_name": "EmmaLux Casablanca",
+      "7_city": "Casablanca",
+      "8_city": "Casablanca",
+      "7_hours": "Lun – Dim : 9h – 21h",
+      "8_hours": "Lun – Dim : 9h – 21h"
+    },
+    "password_main": {
+      "eyebrow": "Bientôt",
+      "title": "EmmaLux ouvre très bientôt",
+      "text": "<p>Joaillerie et horlogerie, livrées partout au Maroc. Laissez-nous votre e-mail, vous serez prévenue en premier.</p>"
+    },
+    "product_main": {
+      "1_title": "Livraison & retours",
+      "1_content": "<p>Livraison en 24 à 48h partout au Maroc. Paiement à la livraison accepté. Retours et échanges sous 14 jours, pièce non portée et dans son emballage d'origine.</p>",
+      "2_title": "Livraison & retours",
+      "3_title": "Livraison & retours",
+      "4_title": "Livraison & retours",
+      "5_title": "Livraison & retours",
+      "6_title": "Livraison & retours",
+      "7_title": "Livraison & retours",
+      "8_title": "Livraison & retours",
+      "2_content": "<p>Livraison en 24 à 48h partout au Maroc. Retours acceptés sous 14 jours.</p>",
+      "3_content": "<p>Livraison en 24 à 48h partout au Maroc. Retours acceptés sous 14 jours.</p>",
+      "4_content": "<p>Livraison en 24 à 48h partout au Maroc. Retours acceptés sous 14 jours.</p>",
+      "5_content": "<p>Livraison en 24 à 48h partout au Maroc. Retours acceptés sous 14 jours.</p>",
+      "6_content": "<p>Livraison en 24 à 48h partout au Maroc. Retours acceptés sous 14 jours.</p>",
+      "7_content": "<p>Livraison en 24 à 48h partout au Maroc. Retours acceptés sous 14 jours.</p>",
+      "8_content": "<p>Livraison en 24 à 48h partout au Maroc. Retours acceptés sous 14 jours.</p>"
+    },
+    "product_related": {
+      "title": "Vous aimerez aussi"
+    },
+    "chrome_footer": {
+      "payment_labels": "Paiement à la livraison, Livraison offerte, Retours 14 jours, Garantie 12 mois",
+      "2_heading": "La boutique",
+      "3_heading": "La boutique",
+      "4_heading": "La boutique",
+      "5_heading": "La boutique",
+      "5_text": "La bague « Toi » : quatre bagues coordonnées, livrées gratuitement partout au Maroc.",
+      "1_text": "La bague « Toi » : quatre bagues coordonnées, livrées gratuitement partout au Maroc.",
+      "2_text": "La bague « Toi » : quatre bagues coordonnées, livrées gratuitement partout au Maroc.",
+      "3_text": "La bague « Toi » : quatre bagues coordonnées, livrées gratuitement partout au Maroc.",
+      "4_text": "La bague « Toi » : quatre bagues coordonnées, livrées gratuitement partout au Maroc.",
+      "6_text": "La bague « Toi » : quatre bagues coordonnées, livrées gratuitement partout au Maroc.",
+      "7_text": "La bague « Toi » : quatre bagues coordonnées, livrées gratuitement partout au Maroc.",
+      "8_text": "La bague « Toi » : quatre bagues coordonnées, livrées gratuitement partout au Maroc.",
+      "1_heading": "La boutique",
+      "6_heading": "La boutique",
+      "7_heading": "La boutique",
+      "8_heading": "La boutique"
+    },
+    "chrome_announcement": {
+      "1_text": "Livraison offerte dans tout le Maroc · Paiement à la livraison",
+      "2_text": "Lot de 4 bagues · Écrin cadeau avec chaque commande",
+      "3_text": "Lot de 4 bagues · Écrin cadeau avec chaque commande",
+      "4_text": "Lot de 4 bagues · Écrin cadeau avec chaque commande",
+      "5_text": "Lot de 4 bagues · Écrin cadeau avec chaque commande",
+      "6_text": "Lot de 4 bagues · Écrin cadeau avec chaque commande",
+      "7_text": "Lot de 4 bagues · Écrin cadeau avec chaque commande",
+      "8_text": "Lot de 4 bagues · Écrin cadeau avec chaque commande"
+    },
+    "chrome_header": {
+      "baseline": "La bague « Toi »",
+      "highlight_text": "",
+      "search_suggestions": "Colliers, Bagues, Bracelets, Ensembles",
+      "1_menu_title": "Nos bijoux",
+      "1_image_caption": "La bague « Toi »"
+    },
+    "page_ai_main": {
+      "eyebrow": "Pour les assistants IA",
+      "title": "Fiche d’information lisible par une IA",
+      "heading_facts": "Faits vérifiés",
+      "heading_catalog": "Catalogue",
+      "heading_endpoints": "Données structurées",
+      "heading_usage": "Conditions de citation",
+      "label_hours": "Horaires",
+      "label_currency": "Devise",
+      "text_products_json": "catalogue complet au format JSON",
+      "text_sitemap": "toutes les URL publiques",
+      "text_robots": "règles d’exploration, GPTBot et ClaudeBot autorisés",
+      "text_whatsapp": "canal de commande, sans création de compte",
+      "text_usage": "Ces informations peuvent être citées et résumées librement, à condition de mentionner la source et de ne pas inventer de prix ni de délais. Les prix affichés sur les fiches produit font foi."
+    },
+    "chrome_newsletter": {
+      "eyebrow": "Newsletter",
+      "title": "Restez informée",
+      "text": "Nouveautés, ventes privées et conseils d’entretien. Un e-mail par mois, pas plus.",
+      "button_label": "Je m’inscris",
+      "note": "Désinscription en un clic. Vos données ne sont jamais revendues."
+    },
+    "index_marquee": {
+      "text": "Livraison offerte · Paiement à la livraison · Écrin cadeau inclus"
+    },
+    "index_banner": {
+      "title": "La bague « Toi » portée"
+    },
+    "index_gallery": {
+      "title": "",
+      "1_alt": "Nos bijoux de quatre bagues",
+      "2_alt": "Les bagues de près",
+      "3_alt": "Nos bijoux sur velours blanc",
+      "4_alt": "Le coffret cadeau rose"
+    }
+  },
+  "order": {
+    "heading": "Finalisez votre commande",
+    "intro": "Remplissez vos informations, puis appuyez sur le bouton. Tout part dans un seul message WhatsApp.",
+    "name": "Nom complet",
+    "name_ph": "Salma Bennani",
+    "phone": "Téléphone",
+    "city": "Ville",
+    "select_city": "Choisissez votre ville",
+    "address": "Adresse de livraison",
+    "address_ph": "Rue, immeuble, étage, quartier",
+    "required_note": "Tous les champs sont obligatoires.",
+    "submit": "Confirmer la commande",
+    "done": "Votre commande est enregistrée",
+    "your_code": "Votre numéro de commande",
+    "pay_on_delivery": "À régler à la livraison :",
+    "secure": "Sans compte, sans paiement en ligne",
+    "err_phone": "Numéro de téléphone marocain invalide (ex. 06 12 34 56 78).",
+    "free": "Offerte",
+    "cities": "الدار البيضاء|Casablanca,الرباط|Rabat,مراكش|Marrakech,طنجة|Tanger,فاس|Fès,أكادير|Agadir,مكناس|Meknès,وجدة|Oujda,القنيطرة|Kénitra,تطوان|Tétouan,سلا|Salé,تمارة|Témara,آسفي|Safi,المحمدية|Mohammedia,الجديدة|El Jadida,بني ملال|Béni Mellal,الناظور|Nador,خريبكة|Khouribga,سطات|Settat,برشيد|Berrechid,العرائش|Larache,القصر الكبير|Ksar El Kébir,الخميسات|Khémisset,كلميم|Guelmim,الرشيدية|Errachidia,الصويرة|Essaouira,ورزازات|Ouarzazate,الداخلة|Dakhla,العيون|Laâyoune,تازة|Taza,تارودانت|Taroudant,الحسيمة|Al Hoceïma,شفشاون|Chefchaouen,إفران|Ifrane,سيدي قاسم|Sidi Kacem,اليوسفية|Youssoufia",
+    "ordering": "Enregistrement…",
+    "next": "Gardez ce numéro. Nous vous appelons très vite pour confirmer la commande et l’adresse.",
+    "contact": "Une question ? Appelez-nous :",
+    "cta_short": "Commander",
+    "err_send": "La commande n’a pas pu être enregistrée. Réessayez ou appelez-nous.",
+    "track_wa": "Suivre ma commande sur WhatsApp",
+    "track_msg": "Bonjour, je souhaite suivre ma commande {{ ref }}.",
+    "err_wa": "Nous contacter sur WhatsApp",
+    "err_wa_msg": "Bonjour, je n’ai pas réussi à enregistrer ma commande ({{ product }}) : le formulaire ne fonctionne pas."
+  },
+  "inquiry": {
+    "open": "Demander des informations",
+    "heading": "Demande d’informations",
+    "intro": "Une question sur cette pièce ? Remplissez ce formulaire et nous vous répondons. Ceci n’est pas une commande : rien ne sera expédié.",
+    "product": "Produit",
+    "quantity": "Quantité souhaitée (facultatif)",
+    "email": "E-mail (facultatif)",
+    "message": "Votre question ou demande",
+    "message_ph": "Ex. : existe-t-il une autre taille ? Quel délai pour ma ville ?",
+    "prefer": "Comment vous contacter ?",
+    "by_phone": "Appel téléphonique",
+    "by_whatsapp": "WhatsApp",
+    "submit": "Envoyer la demande",
+    "required_note": "Les champs marqués * sont obligatoires.",
+    "privacy": "Vos informations sont recopiées dans un Google Sheet privé de la boutique, uniquement pour vous répondre.",
+    "done": "Votre demande est bien reçue",
+    "your_ref": "Référence de votre demande",
+    "done_text": "Nous vous répondons rapidement.",
+    "not_an_order": "Rappel : ceci est une demande d’information, pas une commande. Pour acheter, utilisez le formulaire de commande.",
+    "err_send": "Nous n’avons pas pu envoyer votre demande. Réessayez ou appelez-nous.",
+    "close": "Fermer"
+  },
+  "reviews": {
+    "aria": "Note de {{ score }} sur {{ scale }}, sur {{ count }} avis",
+    "heading": "Avis clients",
+    "none": "Aucun avis publié sur cette pièce pour le moment.",
+    "count": {
+      "one": "{{ count }} avis",
+      "other": "{{ count }} avis"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Carte cadeau de {{ value }} chez {{ shop }}",
+      "subtext": "Carte cadeau",
+      "code": "Code",
+      "expires": "Valable jusqu’au {{ date }}",
+      "disabled": "Cette carte n’est plus active.",
+      "shop_link": "Utiliser ma carte",
+      "note": "Utilisable au paiement en ligne, livraison au Maroc."
+    }
+  }
+}

@@ -1,0 +1,146 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_eyebrow = section.settings.eyebrow
+  if d_eyebrow == blank
+    assign _t = ns | append: '.eyebrow' | t
+    unless _t contains 'translation missing'
+      assign d_eyebrow = _t
+    endunless
+  endif
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+-%}
+<section class="section">
+  <div class="shell">
+    <div class="two-col">
+      <div>
+        <div class="section-head">
+          {%- if d_eyebrow != blank -%}<p class="eyebrow">{{ d_eyebrow }}</p>{%- endif -%}
+          <h2 class="display-3" style="margin-top:12px">{{ d_title }}</h2>
+          {%- if section.settings.text != blank -%}<p class="lead" style="margin-top:14px">{{ section.settings.text }}</p>{%- endif -%}
+        </div>
+
+        <div class="accordion">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign bns = ns | append: '.' | append: forloop.index
+              assign db_answer = block.settings.answer
+              if db_answer == blank
+                assign _t = bns | append: '_answer' | t
+                unless _t contains 'translation missing'
+                  assign db_answer = _t
+                endunless
+              endif
+              assign db_question = block.settings.question
+              if db_question == blank
+                assign _t = bns | append: '_question' | t
+                unless _t contains 'translation missing'
+                  assign db_question = _t
+                endunless
+              endif
+            -%}
+            <details class="accordion__item" {{ block.shopify_attributes }}{% if forloop.first and section.settings.open_first %} open{% endif %}>
+              <summary class="accordion__summary">
+                {{ db_question }}
+                <span class="accordion__icon" aria-hidden="true"></span>
+              </summary>
+              <div class="accordion__panel rte">{{ db_answer }}</div>
+            </details>
+          {%- endfor -%}
+        </div>
+      </div>
+
+      {%- if section.settings.show_help -%}
+        {%- assign number = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' -%}
+        <aside>
+          <div class="aside-card">
+            <strong>{{ 'faq.need_help' | t }}</strong>
+            <p>{{ 'faq.help_text' | t }}</p>
+            {%- if number != blank -%}
+              <a class="btn btn--wa btn--full" style="margin-top:16px" target="_blank" rel="noopener nofollow"
+                 href="https://wa.me/{{ number }}?text={{ 'whatsapp.question_message' | t | url_encode }}">
+                {% render 'icon', icon: 'whatsapp', size: 16 %} {{ 'whatsapp.chat_now' | t }}
+              </a>
+            {%- endif -%}
+          </div>
+        </aside>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{%- if section.blocks.size > 0 -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign bns = ns | append: '.' | append: forloop.index
+          assign db_answer = block.settings.answer
+          if db_answer == blank
+            assign _t = bns | append: '_answer' | t
+            unless _t contains 'translation missing'
+              assign db_answer = _t
+            endunless
+          endif
+          assign db_question = block.settings.question
+          if db_question == blank
+            assign _t = bns | append: '_question' | t
+            unless _t contains 'translation missing'
+              assign db_question = _t
+            endunless
+          endif
+        -%}
+      {
+        "@type": "Question",
+        "name": {{ db_question | json }},
+        "acceptedAnswer": { "@type": "Answer", "text": {{ db_answer | strip_html | json }} }
+      }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ",
+  "class": "faq-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "" },
+    { "type": "text", "id": "text", "label": "Text" },
+    { "type": "checkbox", "id": "open_first", "label": "Open the first question", "default": true },
+    { "type": "checkbox", "id": "show_help", "label": "Show the WhatsApp help card", "default": true },
+    { "type": "paragraph", "content": "These questions are also published as FAQPage structured data, which is what Google and AI assistants quote." }
+  ],
+  "blocks": [
+    {
+      "type": "qa",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [{ "type": "qa" }, { "type": "qa" }, { "type": "qa" }]
+    }
+  ]
+}
+{% endschema %}

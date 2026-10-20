@@ -1,0 +1,133 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_cta_label = section.settings.cta_label
+  if d_cta_label == blank
+    assign _t = ns | append: '.cta_label' | t
+    unless _t contains 'translation missing'
+      assign d_cta_label = _t
+    endunless
+  endif
+  assign d_eyebrow = section.settings.eyebrow
+  if d_eyebrow == blank
+    assign _t = ns | append: '.eyebrow' | t
+    unless _t contains 'translation missing'
+      assign d_eyebrow = _t
+    endunless
+  endif
+  assign d_subtitle = section.settings.subtitle
+  if d_subtitle == blank
+    assign _t = ns | append: '.subtitle' | t
+    unless _t contains 'translation missing'
+      assign d_subtitle = _t
+    endunless
+  endif
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+-%}
+{%- liquid
+  assign col = section.settings.collection
+  assign limit = section.settings.products_to_show
+-%}
+
+<section class="section">
+  <div class="shell">
+    {%- if d_title != blank or d_subtitle != blank -%}
+      <div class="section-head center">
+        {%- if d_eyebrow != blank -%}<p class="eyebrow">{{ d_eyebrow }}</p>{%- endif -%}
+        {%- if d_title != blank -%}
+          <h2 class="section-title" style="margin-top:12px">{{ d_title }}</h2>
+        {%- endif -%}
+        {%- if d_subtitle != blank -%}<p>{{ d_subtitle }}</p>{%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 1 and section.settings.show_tabs -%}
+      <div class="tabs" role="tablist" data-tabs>
+        {%- for block in section.blocks -%}
+          <button
+            class="tab"
+            role="tab"
+            type="button"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            data-tab-target="tab-{{ section.id }}-{{ forloop.index }}"
+            {{ block.shopify_attributes }}>
+            {{ block.settings.collection.title | default: block.settings.label }}
+          </button>
+        {%- endfor -%}
+      </div>
+
+      {%- for block in section.blocks -%}
+        <div
+          id="tab-{{ section.id }}-{{ forloop.index }}"
+          class="product-grid product-grid--4"
+          data-tab-panel
+          {% unless forloop.first %}hidden{% endunless %}>
+          {%- for product in block.settings.collection.products limit: limit -%}
+            {% render 'product-card', product: product, index: forloop.index %}
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
+
+    {%- else -%}
+      <div class="product-grid product-grid--4">
+        {%- if col != blank -%}
+          {%- for product in col.products limit: limit -%}
+            {% render 'product-card', product: product, index: forloop.index %}
+          {%- endfor -%}
+        {%- else -%}
+          {%- for i in (1..limit) -%}
+            <article class="card">
+              <div class="card__media">{{ 'product-' | append: forloop.index | placeholder_svg_tag }}</div>
+              <div class="card__body"><h3 class="card__title">{{ 'onboarding.product_title' | t }}</h3></div>
+            </article>
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if d_cta_label != blank -%}
+      <div class="center" style="margin-top:44px">
+        <a href="{{ section.settings.cta_url | default: col.url }}" class="btn btn--outline">{{ d_cta_label }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product grid",
+  "class": "featured-products-section",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "" },
+    { "type": "text", "id": "subtitle", "label": "Subheading" },
+    { "type": "collection", "id": "collection", "label": "Collection", "info": "Used when tabs are off." },
+    { "type": "range", "id": "products_to_show", "label": "Products", "min": 2, "max": 12, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "show_tabs", "label": "Show collection tabs", "default": false, "info": "Add one block per tab." },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "" },
+    { "type": "url", "id": "cta_url", "label": "Button link" }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "text", "id": "label", "label": "Label override" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Product grid" }]
+}
+{% endschema %}

@@ -1,0 +1,33 @@
+<section class="section section--tight">
+  <div class="shell">
+    <div class="page-head"><h1 class="display-2">Mes adresses</h1></div>
+    <div class="two-col" style="margin-top:30px">
+      <div>
+        {%- paginate customer.addresses by 10 -%}
+          {%- for address in customer.addresses -%}
+            <div class="aside-card" style="margin-bottom:14px">
+              <strong>{% if address == customer.default_address %}Adresse par défaut{% else %}Adresse{% endif %}</strong>
+              <p>{{ address | format_address }}</p>
+            </div>
+          {%- else -%}
+            <p class="muted">Aucune adresse enregistrée.</p>
+          {%- endfor -%}
+          {% render 'pagination', paginate: paginate %}
+        {%- endpaginate -%}
+      </div>
+      <aside>
+        <div class="aside-card">
+          <strong>Nouvelle adresse</strong>
+          {% form 'customer_address', customer.new_address, class: 'contact-form', style: 'margin-top:14px' %}
+            <input class="input" type="text" name="address[address1]" placeholder="Adresse" value="{{ form.address1 }}">
+            <input class="input" type="text" name="address[city]" placeholder="Ville" value="{{ form.city }}">
+            <input class="input" type="text" name="address[zip]" placeholder="Code postal" value="{{ form.zip }}">
+            <input class="input" type="text" name="address[phone]" placeholder="Téléphone" value="{{ form.phone }}">
+            <input type="hidden" name="address[country]" value="Morocco">
+            <button type="submit" class="btn btn--dark btn--full">Enregistrer</button>
+          {% endform %}
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>

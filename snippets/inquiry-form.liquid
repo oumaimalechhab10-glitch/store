@@ -1,0 +1,134 @@
+{%- comment -%}
+  "Ask about this piece" — a question, never an order.
+
+  Opens a dialog whose product fields are filled from Liquid, so the lead
+  always carries the exact product the shopper was looking at. The submission
+  goes to the shop's Apps Script web app and lands in the "Demandes" tab,
+  alongside but separate from the orders.
+
+  Deliberately NOT wired to the cart: an inquiry must not be able to become a
+  sale by accident.
+
+  Usage: {% render 'inquiry-form', product: product, variant: current_variant %}
+{%- endcomment -%}
+{%- liquid
+  assign endpoint = settings.inquiry_endpoint
+  if endpoint == blank
+    assign endpoint = settings.order_endpoint
+  endif
+  assign v = variant | default: product.selected_or_first_available_variant
+-%}
+{%- if endpoint != blank -%}
+  <button type="button" class="btn btn--outline btn--full" data-inquiry-open style="margin-top:10px">
+    {% render 'icon', icon: 'mail', size: 16 %}
+    {{ 'inquiry.open' | t }}
+  </button>
+
+  <div class="inquiry" data-inquiry hidden>
+    <div class="inquiry__scrim" data-inquiry-close></div>
+
+    <div class="inquiry__panel" role="dialog" aria-modal="true" aria-labelledby="inquiry-title">
+      <div class="inquiry__head">
+        <h2 class="inquiry__title" id="inquiry-title">{{ 'inquiry.heading' | t }}</h2>
+        <button type="button" class="inquiry__x" data-inquiry-close aria-label="{{ 'inquiry.close' | t }}">
+          {% render 'icon', icon: 'close', size: 18 %}
+        </button>
+      </div>
+
+      <form
+        class="inquiry__form"
+        data-inquiry-form
+        data-endpoint="{{ endpoint }}"
+        data-shop="{{ shop.name | escape }}"
+        data-product="{{ product.title | escape }}"
+        data-product-id="{{ product.id }}"
+        data-sku="{{ v.sku | default: product.handle | escape }}"
+        data-url="{{ shop.url }}{{ product.url }}"
+        data-err-phone="{{ 'order.err_phone' | t | escape }}"
+        data-err-send="{{ 'inquiry.err_send' | t | escape }}"
+        novalidate>
+
+        <p class="inquiry__intro">{{ 'inquiry.intro' | t }}</p>
+
+        <p class="inquiry__product">
+          <span class="muted">{{ 'inquiry.product' | t }} :</span>
+          <strong>{{ product.title }}</strong>
+          {%- if v.sku != blank -%}<span class="muted" dir="ltr"> ({{ v.sku }})</span>{%- endif -%}
+        </p>
+
+        {%- comment -%} Honeypot. {%- endcomment -%}
+        <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" class="order-form__hp">
+
+        <div class="order-form__grid">
+          <p class="field-row">
+            <label class="label" for="iq-name">{{ 'order.name' | t }} *</label>
+            <input class="input" id="iq-name" name="name" required minlength="2" maxlength="80" autocomplete="name">
+          </p>
+          <p class="field-row">
+            <label class="label" for="iq-phone">{{ 'order.phone' | t }} *</label>
+            <input class="input" id="iq-phone" name="phone" type="tel" inputmode="tel" required
+                   maxlength="20" autocomplete="tel" dir="ltr" placeholder="06 12 34 56 78">
+          </p>
+          <p class="field-row">
+            <label class="label" for="iq-city">{{ 'order.city' | t }}</label>
+            <select class="input" id="iq-city" name="city">
+              <option value="" selected>{{ 'order.select_city' | t }}</option>
+              {%- assign cities = 'order.cities' | t | split: ',' -%}
+              {%- for pair in cities -%}
+                {%- assign bits = pair | split: '|' -%}
+                <option value="{{ bits[0] | escape }}">{{ bits[1] | default: bits[0] }}</option>
+              {%- endfor -%}
+            </select>
+          </p>
+          <p class="field-row">
+            <label class="label" for="iq-qty">{{ 'inquiry.quantity' | t }}</label>
+            <input class="input" id="iq-qty" name="quantity" type="number" min="1" max="50" value="1" dir="ltr">
+          </p>
+          <p class="field-row">
+            <label class="label" for="iq-email">{{ 'inquiry.email' | t }}</label>
+            <input class="input" id="iq-email" name="email" type="email" maxlength="160" autocomplete="email" dir="ltr">
+          </p>
+          <p class="field-row">
+            <label class="label" for="iq-message">{{ 'inquiry.message' | t }} *</label>
+            <textarea class="input" id="iq-message" name="message" rows="4" required minlength="5" maxlength="1200"
+                      placeholder="{{ 'inquiry.message_ph' | t | escape }}"></textarea>
+          </p>
+        </div>
+
+        <fieldset class="inquiry__prefer">
+          <legend class="label">{{ 'inquiry.prefer' | t }}</legend>
+          <label><input type="radio" name="contactPref" value="phone" checked> {{ 'inquiry.by_phone' | t }}</label>
+          <label><input type="radio" name="contactPref" value="whatsapp"> {{ 'inquiry.by_whatsapp' | t }}</label>
+        </fieldset>
+
+        <p class="order-form__hint">{{ 'inquiry.required_note' | t }}</p>
+        <p class="order-form__error" data-inquiry-error hidden></p>
+
+        <button type="submit" class="btn btn--dark btn--full btn--lg" data-inquiry-submit>
+          {% render 'icon', icon: 'check', size: 16 %}
+          <span data-inquiry-label>{{ 'inquiry.submit' | t }}</span>
+        </button>
+
+        <p class="inquiry__privacy">
+          {% render 'icon', icon: 'lock', size: 14 %}
+          <span>{{ 'inquiry.privacy' | t }}</span>
+        </p>
+      </form>
+
+      <div class="inquiry__done" data-inquiry-done hidden>
+        <div class="order-done__tick">{% render 'icon', icon: 'check', size: 22 %}</div>
+        <p class="order-done__title">{{ 'inquiry.done' | t }}</p>
+        <p class="order-done__label">{{ 'inquiry.your_ref' | t }}</p>
+        <p class="order-done__code" dir="ltr" data-inquiry-ref></p>
+        <p class="order-done__text">{{ 'inquiry.done_text' | t }}</p>
+        <p class="inquiry__notorder">{{ 'inquiry.not_an_order' | t }}</p>
+        {%- if settings.shop_phone != blank -%}
+          {%- assign tel = settings.shop_phone | remove: ' ' | remove: '-' -%}
+          <p class="order-done__contact">
+            <a href="tel:{{ tel }}" dir="ltr">{{ settings.shop_phone }}</a>
+          </p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}

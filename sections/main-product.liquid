@@ -1,0 +1,349 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+-%}
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign on_sale = false
+  if variant.compare_at_price > variant.price
+    assign on_sale = true
+    assign saved = variant.compare_at_price | minus: variant.price | times: 100 | divided_by: variant.compare_at_price
+  endif
+-%}
+
+<div class="shell">
+  {% render 'breadcrumbs' %}
+</div>
+
+<div class="shell" style="padding-bottom: clamp(48px,7vw,86px)">
+  <div class="product" data-product-root data-product-id="{{ product.id }}">
+
+    {%- comment -%} ---------------------------- gallery ---------------------------- {%- endcomment -%}
+    <div>
+      <div class="gallery gallery--mosaic" data-gallery>
+        {%- for media in product.media -%}
+          {%- assign is_full = false -%}
+          {%- if forloop.index == 1 and product.media.size > 2 -%}{%- assign is_full = true -%}{%- endif -%}
+          <div class="gallery__item{% if is_full %} gallery__item--full{% endif %}" data-gallery-item="{{ forloop.index0 }}">
+            <img
+              src="{{ media | image_url: width: 1200 }}"
+              srcset="{{ media | image_url: width: 600 }} 600w, {{ media | image_url: width: 1200 }} 1200w, {{ media | image_url: width: 1800 }} 1800w"
+              sizes="(max-width: 999px) 100vw, 50vw"
+              alt="{{ media.alt | default: product.title | escape }}"
+              width="{{ media.preview_image.width }}"
+              height="{{ media.preview_image.height }}"
+              {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+          </div>
+        {%- else -%}
+          <div class="gallery__item gallery__item--full">{{ 'product-1' | placeholder_svg_tag }}</div>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- comment -%} ----------------------------- rail ------------------------------ {%- endcomment -%}
+    <div class="product__rail">
+      {%- if product.vendor != blank and section.settings.show_vendor -%}
+        <p class="product__vendor">{{ product.vendor }}</p>
+      {%- endif -%}
+
+      <h1 class="product__title">{{ product.title }}</h1>
+
+      {%- assign subtitle = product.metafields.custom.subtitle -%}
+      {%- if subtitle != blank -%}
+        <p class="product__sub">{{ subtitle }}</p>
+      {%- endif -%}
+
+      <div class="product__price-row">
+        <span class="product__price" data-price>{% render 'price', product: product, variant: variant %}</span>
+        {%- if on_sale -%}
+          <span class="badge badge--sale" data-discount>-{{ saved }}%</span>
+        {%- endif -%}
+      </div>
+
+      <p class="product__meta">
+        {%- if variant.sku != blank -%}<span data-sku>{{ 'products.sku' | t }} {{ variant.sku }}</span> · {%- endif -%}
+        <span data-availability>
+          {%- if variant.available -%}{{ 'products.in_stock' | t }}{%- else -%}{{ 'products.sold_out' | t }}{%- endif -%}
+        </span>
+      </p>
+
+      <form method="post" action="{{ routes.cart_add_url }}" id="product-form-{{ section.id }}" data-product-form data-ajax-cart-form>
+        <input type="hidden" name="id" value="{{ variant.id }}" data-variant-id>
+
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            {%- assign dn = option.name | downcase -%}
+            {%- assign is_colour = false -%}
+            {%- if dn contains 'coul' or dn contains 'color' or dn contains 'colour' -%}{%- assign is_colour = true -%}{%- endif -%}
+
+            <div class="option" data-option-index="{{ forloop.index0 }}">
+              <div class="option__head">
+                <span class="option__name">{{ option.name }}</span>
+                <span class="option__value" data-option-selected="{{ forloop.index0 }}">{{ option.selected_value }}</span>
+                {%- if section.settings.size_guide_page != blank and is_colour == false -%}
+                  <a href="{{ section.settings.size_guide_page }}" class="option__value link-underline" style="color:var(--c-gold)">
+                    {% render 'icon', icon: 'ruler', size: 14 %} {{ 'products.size_guide' | t }}
+                  </a>
+                {%- endif -%}
+              </div>
+
+              <div class="option__list" role="radiogroup" aria-label="{{ option.name | escape }}">
+                {%- for value in option.values -%}
+                  {%- liquid
+                    # Three sources for a swatch colour, in order of trust:
+                    #   1. Shopify's native option-value swatches (Products → Options → Swatch)
+                    #   2. the "Colour swatches" map in theme settings, e.g. "Or:#c9a227"
+                    #   3. nothing — the value falls back to a text pill
+                    assign swatch_css = ''
+                    assign swatch_img = ''
+                    if value.swatch.color
+                      assign swatch_css = value.swatch.color
+                    endif
+                    if value.swatch.image
+                      assign swatch_img = value.swatch.image | image_url: width: 80
+                    endif
+
+                    if swatch_css == '' and section.settings.swatch_map != blank
+                      assign pairs = section.settings.swatch_map | split: ','
+                      for pair in pairs
+                        assign bits = pair | split: ':'
+                        assign label = bits[0] | strip | downcase
+                        assign current = value | strip | downcase
+                        if label == current and bits[1]
+                          assign swatch_css = bits[1] | strip
+                        endif
+                      endfor
+                    endif
+
+                    assign as_swatch = false
+                    if is_colour and swatch_css != ''
+                      assign as_swatch = true
+                    endif
+                    if is_colour and swatch_img != ''
+                      assign as_swatch = true
+                    endif
+                  -%}
+                  <button
+                    type="button"
+                    class="option__btn{% if as_swatch %} option__btn--swatch{% endif %}"
+                    role="radio"
+                    aria-checked="{% if option.selected_value == value %}true{% else %}false{% endif %}"
+                    data-option-value
+                    data-option-position="{{ option.position }}"
+                    data-value="{{ value | escape }}"
+                    {% if as_swatch %}
+                      style="--swatch: {{ swatch_css | default: 'transparent' }}{% if swatch_img != '' %}; background-image: url({{ swatch_img }}){% endif %}"
+                      title="{{ value | escape }}"
+                      aria-label="{{ value | escape }}"
+                    {% endif %}>
+                    {%- unless as_swatch -%}{{ value }}{%- endunless -%}
+                  </button>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endunless -%}
+
+        <div class="option">
+          <span class="option__name" style="display:block; margin-bottom:10px">{{ 'products.quantity' | t }}</span>
+          <div class="qty" data-qty>
+            <button type="button" data-qty-down aria-label="{{ 'cart.decrease' | t }}">&minus;</button>
+            <input type="number" name="quantity" value="1" min="1" max="20" aria-label="{{ 'products.quantity' | t }}">
+            <button type="button" data-qty-up aria-label="{{ 'cart.increase' | t }}">+</button>
+          </div>
+        </div>
+
+        <div class="product__actions">
+
+
+          <p class="btn-note">
+            {% render 'icon', icon: 'shield', size: 15 %}
+            <span>{{ 'products.cta_note' | t: days: settings.return_days }}</span>
+          </p>
+        </div>
+      </form>
+
+      {%- comment -%}
+        Ordering is this form: four fields, one press, and the whole order
+        is written straight into the shop’s Google Sheet.
+        It must live OUTSIDE the add-to-cart form — HTML forbids nested
+        forms and the parser drops the inner one without a word.
+      {%- endcomment -%}
+      <div id="order-form">{% render 'order-form', product: product, variant: variant %}</div>
+
+      {% render 'product-rating', product: product %}
+
+      {% render 'inquiry-form', product: product, variant: variant %}
+
+          {%- comment -%}
+            Option A ordering: add the line and go straight to checkout, for
+            shops that take payment through Shopify rather than the order
+            form. Turn it off in Theme settings > Orders & Google Sheet.
+          {%- endcomment -%}
+          {%- if settings.show_buy_now -%}
+            <button type="submit" class="btn btn--dark btn--full btn--lg" style="margin-top:14px"
+                    form="product-form-{{ section.id }}" data-buy-now
+                    {% unless variant.available %}disabled{% endunless %}>
+              <span data-add-label>
+                {%- if variant.available -%}{{ 'products.buy_now' | t }}{%- else -%}{{ 'products.sold_out' | t }}{%- endif -%}
+              </span>
+            </button>
+          {%- endif -%}
+
+          {%- comment -%} Secondary, deliberately small. {%- endcomment -%}
+          <div class="product__minor">
+            <button type="submit" class="link-mini" form="product-form-{{ section.id }}" data-add-to-cart
+              {% unless variant.available %}disabled{% endunless %}>
+              {% render 'icon', icon: 'cart', size: 14 %}
+              <span data-add-label>
+                {%- if variant.available -%}{{ 'products.add_to_cart' | t }}{%- else -%}{{ 'products.sold_out' | t }}{%- endif -%}
+              </span>
+            </button>
+          </div>
+
+      {%- if section.settings.show_reassurance -%}
+        <ul class="product__reassurance">
+          <li>{% render 'icon', icon: 'truck', size: 17 %}<span>{{ 'products.reassurance_delivery' | t }}</span></li>
+          <li>{% render 'icon', icon: 'cash', size: 17 %}<span>{{ 'products.reassurance_cod' | t }}</span></li>
+          <li>{% render 'icon', icon: 'shield', size: 17 %}<span>{{ 'products.reassurance_warranty' | t: months: settings.warranty_months }}</span></li>
+          <li>{% render 'icon', icon: 'return', size: 17 %}<span>{{ 'products.reassurance_returns' | t: days: settings.return_days }}</span></li>
+        </ul>
+      {%- endif -%}
+
+      {%- comment -%}
+        Compact fact table. Humans skim it; assistants parse it. Everything here
+        comes from metafields so the merchant controls it from the Shopify admin.
+      {%- endcomment -%}
+      <dl class="spec-list">
+        {%- if product.metafields.custom.material != blank -%}
+          <div><dt>{{ 'products.material' | t }}</dt><dd>{{ product.metafields.custom.material }}</dd></div>
+        {%- endif -%}
+        {%- if variant.sku != blank -%}
+          <div><dt>{{ 'products.reference' | t }}</dt><dd>{{ variant.sku }}</dd></div>
+        {%- endif -%}
+        {%- if variant.weight > 0 -%}
+          <div><dt>{{ 'products.weight' | t }}</dt><dd>{{ variant.weight | weight_with_unit: variant.weight_unit }}</dd></div>
+        {%- endif -%}
+        <div><dt>{{ 'products.delivery' | t }}</dt><dd>{{ 'products.delivery_value' | t }}</dd></div>
+        <div><dt>{{ 'products.payment' | t }}</dt><dd>{{ 'products.payment_value' | t }}</dd></div>
+        <div><dt>{{ 'products.ships_to' | t }}</dt><dd>{{ 'general.morocco' | t }}</dd></div>
+      </dl>
+
+      <div class="accordion" style="margin-top:26px">
+        {%- if product.description != blank -%}
+          <details class="accordion__item" open>
+            <summary class="accordion__summary">{{ 'products.description' | t }}<span class="accordion__icon"></span></summary>
+            <div class="accordion__panel rte">{{ product.description }}</div>
+          </details>
+        {%- endif -%}
+
+        {%- if product.metafields.custom.features != blank -%}
+          <details class="accordion__item">
+            <summary class="accordion__summary">{{ 'products.features' | t }}<span class="accordion__icon"></span></summary>
+            <div class="accordion__panel rte">{{ product.metafields.custom.features | metafield_tag }}</div>
+          </details>
+        {%- endif -%}
+
+        {%- if product.metafields.custom.care != blank -%}
+          <details class="accordion__item">
+            <summary class="accordion__summary">{{ 'products.care' | t }}<span class="accordion__icon"></span></summary>
+            <div class="accordion__panel rte">{{ product.metafields.custom.care | metafield_tag }}</div>
+          </details>
+        {%- endif -%}
+
+        {%- for block in section.blocks -%}
+
+          {%- liquid
+
+            assign bns = ns | append: '.' | append: forloop.index
+
+            assign db_content = block.settings.content
+
+            if db_content == blank
+
+              assign _t = bns | append: '_content' | t
+
+              unless _t contains 'translation missing'
+
+                assign db_content = _t
+
+              endunless
+
+            endif
+
+            assign db_title = block.settings.title
+
+            if db_title == blank
+
+              assign _t = bns | append: '_title' | t
+
+              unless _t contains 'translation missing'
+
+                assign db_title = _t
+
+              endunless
+
+            endif
+
+          -%}
+          {%- if block.type == 'accordion' -%}
+            <details class="accordion__item" {{ block.shopify_attributes }}>
+              <summary class="accordion__summary">{{ db_title }}<span class="accordion__icon"></span></summary>
+              <div class="accordion__panel rte">{{ db_content }}</div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} ------------------------- sticky buy bar -------------------------- {%- endcomment -%}
+<div class="sticky-bar" data-sticky-bar>
+  <div class="shell sticky-bar__inner">
+    {%- if product.featured_image -%}
+      <img src="{{ product.featured_image | image_url: width: 120 }}" alt="" width="46" height="58" loading="lazy">
+    {%- endif -%}
+    <div class="sticky-bar__info">
+      <strong>{{ product.title }}</strong>
+      <span class="small muted" data-sticky-price>{{ variant.price | money }}</span>
+    </div>
+    <div class="sticky-bar__actions">
+      <button type="button" class="btn btn--dark btn--sm" data-sticky-add>{{ 'products.add_to_cart' | t }}</button>
+      <a href="#order-form" class="btn btn--outline btn--sm">{{ 'order.cta_short' | t }}</a>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" data-product-json>
+  {{ product.variants | json }}
+</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "class": "main-product-section",
+  "settings": [
+    { "type": "checkbox", "id": "show_vendor", "label": "Show vendor", "default": true },
+    { "type": "checkbox", "id": "show_reassurance", "label": "Show reassurance list", "default": true },
+    { "type": "url", "id": "size_guide_page", "label": "Size guide page" },
+    { "type": "textarea", "id": "swatch_map", "label": "Colour swatches", "info": "One pair per colour, comma separated: Or:#c9a227, Argenté:#c9ccd1, Or rose:#d9a299. Ignored for colours that already have a native Shopify swatch.", "default": "Or:#c9a227, Gold:#c9a227, Argenté:#c9ccd1, Silver:#c9ccd1, Or rose:#d9a299, Rose gold:#d9a299, Noir:#17120f, Black:#17120f, Nacre:#f2ece2" },
+    { "type": "header", "content": "Product metafields" },
+    { "type": "paragraph", "content": "Create metafields custom.subtitle (single line text), custom.material (single line text), custom.features and custom.care (rich text) to fill the subtitle, fact table and accordions." }
+  ],
+  "blocks": [
+    {
+      "type": "accordion",
+      "name": "Extra accordion",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "" },
+        { "type": "richtext", "id": "content", "label": "Content", "default": "" }
+      ]
+    }
+  ]
+}
+{% endschema %}

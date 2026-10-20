@@ -1,0 +1,126 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_eyebrow = section.settings.eyebrow
+  if d_eyebrow == blank
+    assign _t = ns | append: '.eyebrow' | t
+    unless _t contains 'translation missing'
+      assign d_eyebrow = _t
+    endunless
+  endif
+  assign d_note = section.settings.note
+  if d_note == blank
+    assign _t = ns | append: '.note' | t
+    unless _t contains 'translation missing'
+      assign d_note = _t
+    endunless
+  endif
+  assign d_text = section.settings.text
+  if d_text == blank
+    assign _t = ns | append: '.text' | t
+    unless _t contains 'translation missing'
+      assign d_text = _t
+    endunless
+  endif
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+-%}
+{%- assign number = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' -%}
+
+<section class="section wa-block">
+  <div class="shell center">
+    {%- if d_eyebrow != blank -%}
+      <p class="eyebrow" style="color: var(--c-goldsoft)">{{ d_eyebrow }}</p>
+    {%- endif -%}
+    {%- if d_title != blank -%}
+      <h2 style="margin-top:14px">{{ d_title }}</h2>
+    {%- endif -%}
+    {%- if d_text != blank -%}
+      <p class="lead" style="color: rgba(250,247,243,.7); max-width: 56ch; margin: 16px auto 0">{{ d_text }}</p>
+    {%- endif -%}
+
+    <div class="wa-steps" style="text-align:left">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign bns = ns | append: '.' | append: forloop.index
+          assign db_text = block.settings.text
+          if db_text == blank
+            assign _t = bns | append: '_text' | t
+            unless _t contains 'translation missing'
+              assign db_text = _t
+            endunless
+          endif
+          assign db_title = block.settings.title
+          if db_title == blank
+            assign _t = bns | append: '_title' | t
+            unless _t contains 'translation missing'
+              assign db_title = _t
+            endunless
+          endif
+        -%}
+        <div class="wa-step" {{ block.shopify_attributes }}>
+          <span class="wa-step__num">{{ forloop.index }}</span>
+          <strong>{{ db_title }}</strong>
+          <p>{{ db_text }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if number != blank -%}
+      <a
+        class="btn btn--wa btn--lg"
+        style="margin-top:42px"
+        href="https://wa.me/{{ number }}?text={{ 'whatsapp.fab_message' | t: shop: shop.name | url_encode }}"
+        target="_blank"
+        rel="noopener noreferrer nofollow">
+        {% render 'icon', icon: 'whatsapp', size: 18 %}
+        {{ section.settings.cta_label | default: settings.whatsapp_number }}
+      </a>
+      <p class="small" style="margin-top:14px; color: rgba(250,247,243,.45)">{{ d_note }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "WhatsApp steps",
+  "class": "whatsapp-section",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "info": "Defaults to the WhatsApp number from theme settings." },
+    { "type": "text", "id": "note", "label": "Note under the button", "default": "" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "WhatsApp steps",
+      "blocks": [
+        { "type": "step", "settings": { "title": "Ajoutez au panier", "text": "Choisissez la taille et la couleur qui vous conviennent." } },
+        { "type": "step", "settings": { "title": "Envoyez sur WhatsApp", "text": "Un message pré-rempli part avec le récapitulatif de votre panier." } },
+        { "type": "step", "settings": { "title": "Recevez et payez", "text": "Livraison en 24 à 48h, réglée en espèces au livreur." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

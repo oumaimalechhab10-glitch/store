@@ -1,0 +1,14 @@
+<section class="section section--tight">
+  <div class="shell">
+    <div class="page-content page-content--narrow" style="max-width:420px">
+      <h1 class="display-3 center">Activer mon compte</h1>
+      {% form 'activate_customer_password', class: 'contact-form', style: 'margin-top:26px' %}
+        {{ form.errors | default_errors }}
+        <div><label class="label" for="ActivatePassword">Mot de passe</label><input class="input" type="password" name="customer[password]" id="ActivatePassword" autocomplete="new-password"></div>
+        <div><label class="label" for="ActivateConfirm">Confirmation</label><input class="input" type="password" name="customer[password_confirmation]" id="ActivateConfirm" autocomplete="new-password"></div>
+        <button type="submit" class="btn btn--dark btn--full">Activer</button>
+        <button type="submit" name="decline" class="btn btn--ghost btn--full">Refuser l’invitation</button>
+      {% endform %}
+    </div>
+  </div>
+</section>

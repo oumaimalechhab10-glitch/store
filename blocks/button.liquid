@@ -1,0 +1,51 @@
+{%- comment -%}
+  Theme block: a single button.
+
+  Renders nothing without a label, so an empty block never leaves a stray
+  outline on the page.
+
+  Used by: sections/rich-text.liquid
+{%- endcomment -%}
+
+{%- if block.settings.label != blank -%}
+  <div class="block-button" style="margin-top:{{ block.settings.spacing }}px" {{ block.shopify_attributes }}>
+    <a href="{{ block.settings.url | default: '#' }}"
+       class="btn btn--{{ block.settings.style }}"
+       {% if block.settings.new_tab %}target="_blank" rel="noopener"{% endif %}>
+      {{- block.settings.label -}}
+    </a>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Button",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Label" },
+    { "type": "url", "id": "url", "label": "Link" },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Style",
+      "default": "outline",
+      "options": [
+        { "value": "dark", "label": "Solid dark" },
+        { "value": "gold", "label": "Gold" },
+        { "value": "outline", "label": "Outline" }
+      ]
+    },
+    { "type": "checkbox", "id": "new_tab", "label": "Open in a new tab", "default": false },
+    {
+      "type": "range",
+      "id": "spacing",
+      "label": "Space above",
+      "min": 0,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 26
+    }
+  ],
+  "presets": [{ "name": "Button" }]
+}
+{% endschema %}

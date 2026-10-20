@@ -1,0 +1,131 @@
+{%- comment -%}
+  Measurement, in three independent layers. Each is off until an ID is entered
+  in the theme settings, so a fresh install sends nothing anywhere.
+
+  1. First-party beacon — no cookie, no third party. Posts to the endpoint in
+     "URL du collecteur". Leave it blank and nothing is sent.
+  2. GA4 — loaded only if a measurement ID is present.
+  3. Meta Pixel — loaded only if a pixel ID is present.
+
+  Layers 2 and 3 write cookies and send data to the United States, which under
+  Moroccan law 09-08 requires informing the visitor. The consent bar below is
+  shown whenever either is enabled, and they are held back until the visitor
+  accepts. Layer 1 needs no consent and therefore never waits for it.
+
+  Shopify's own analytics (Admin → Analytics) always runs regardless; it is
+  first-party and needs nothing here.
+{%- endcomment -%}
+
+{%- liquid
+  assign ga = settings.ga4_id | strip
+  assign pixel = settings.meta_pixel_id | strip
+  assign beacon = settings.beacon_url | strip
+  assign needs_consent = false
+  if ga != blank or pixel != blank
+    assign needs_consent = true
+  endif
+-%}
+
+{%- if beacon != blank -%}
+  <script>
+    (function () {
+      // Do Not Track and Global Privacy Control are honoured even here, where
+      // no law requires it: a shop that asks for no account should not ignore
+      // the one signal a visitor can actually send it.
+      var n = window.navigator;
+      if (n.doNotTrack === '1' || n.msDoNotTrack === '1' || n.globalPrivacyControl === true) return;
+
+      var ENDPOINT = {{ beacon | json }};
+      var ctx = {
+        locale: {{ request.locale.iso_code | json }},
+        template: {{ template.name | json }},
+        {%- if product %}entity: 'product', entityId: {{ product.handle | json }}{% elsif collection %}entity: 'collection', entityId: {{ collection.handle | json }}{% else %}entity: '', entityId: ''{% endif %}
+      };
+
+      function send(event, data) {
+        var body = JSON.stringify(Object.assign({
+          event: event,
+          path: location.pathname + location.search,
+          referrer: document.referrer && document.referrer.indexOf(location.host) === -1 ? document.referrer : ''
+        }, ctx, data || {}));
+        try {
+          if (n.sendBeacon) { n.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' })); return; }
+        } catch (e) {}
+        fetch(ENDPOINT, { method: 'POST', body: body, keepalive: true, mode: 'no-cors', headers: { 'Content-Type': 'application/json' } }).catch(function () {});
+      }
+
+      window.emmaluxTrack = send;
+      send('pageview');
+
+      // The two actions that matter on this shop: reaching WhatsApp and
+      // putting something in the bag.
+      document.addEventListener('click', function (e) {
+        var wa = e.target.closest && e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]');
+        if (wa) send('whatsapp_click', { entityId: ctx.entityId || '' });
+        var add = e.target.closest && e.target.closest('[name="add"], [data-add-to-cart]');
+        if (add) send('add_to_cart', { entityId: ctx.entityId || '' });
+      }, { passive: true });
+    })();
+  </script>
+{%- endif -%}
+
+{%- if needs_consent -%}
+  <script>
+    (function () {
+      var KEY = 'emmalux:consent';
+      var stored = null;
+      try { stored = localStorage.getItem(KEY); } catch (e) {}
+
+      function load() {
+        {%- if ga != blank -%}
+        (function () {
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id={{ ga }}';
+          document.head.appendChild(s);
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () { window.dataLayer.push(arguments); };
+          gtag('js', new Date());
+          gtag('config', {{ ga | json }}, { anonymize_ip: true, currency: 'MAD', country: 'MA' });
+        })();
+        {%- endif -%}
+        {%- if pixel != blank -%}
+        (function (f, b, e, v, n, t, s) {
+          if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+          if (!f._fbq) f._fbq = n; n.push = n; n.loaded = true; n.version = '2.0'; n.queue = [];
+          t = b.createElement(e); t.async = true; t.src = v;
+          s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+        })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', {{ pixel | json }});
+        fbq('track', 'PageView');
+        {%- endif -%}
+      }
+
+      if (stored === 'yes') { load(); return; }
+      if (stored === 'no') return;
+
+      document.addEventListener('DOMContentLoaded', function () {
+        var bar = document.createElement('div');
+        bar.className = 'consent';
+        bar.setAttribute('role', 'dialog');
+        bar.setAttribute('aria-live', 'polite');
+        bar.setAttribute('aria-label', {{ 'general.consent_title' | t | json }});
+        bar.innerHTML =
+          '<p class="consent__text">' + {{ 'general.consent_text' | t | json }} + '</p>' +
+          '<div class="consent__actions">' +
+            '<button type="button" class="btn btn--ghost btn--sm" data-consent="no">' + {{ 'general.consent_decline' | t | json }} + '</button>' +
+            '<button type="button" class="btn btn--primary btn--sm" data-consent="yes">' + {{ 'general.consent_accept' | t | json }} + '</button>' +
+          '</div>';
+        document.body.appendChild(bar);
+        bar.addEventListener('click', function (e) {
+          var b = e.target.closest('[data-consent]');
+          if (!b) return;
+          var answer = b.getAttribute('data-consent');
+          try { localStorage.setItem(KEY, answer); } catch (err) {}
+          bar.remove();
+          if (answer === 'yes') load();
+        });
+      });
+    })();
+  </script>
+{%- endif -%}

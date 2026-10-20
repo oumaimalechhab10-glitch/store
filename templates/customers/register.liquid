@@ -1,0 +1,17 @@
+<section class="section section--tight">
+  <div class="shell">
+    <div class="page-content page-content--narrow" style="max-width:460px">
+      <h1 class="display-3 center">Créer un compte</h1>
+      {% form 'create_customer', class: 'contact-form', style: 'margin-top:28px' %}
+        {{ form.errors | default_errors }}
+        <div class="contact-form__row">
+          <div><label class="label" for="FirstName">Prénom</label><input class="input" type="text" name="customer[first_name]" id="FirstName" autocomplete="given-name"></div>
+          <div><label class="label" for="LastName">Nom</label><input class="input" type="text" name="customer[last_name]" id="LastName" autocomplete="family-name"></div>
+        </div>
+        <div><label class="label" for="RegisterEmail">E-mail</label><input class="input" type="email" name="customer[email]" id="RegisterEmail" autocomplete="email" required></div>
+        <div><label class="label" for="RegisterPassword">Mot de passe</label><input class="input" type="password" name="customer[password]" id="RegisterPassword" autocomplete="new-password" required></div>
+        <button type="submit" class="btn btn--dark btn--full">Créer mon compte</button>
+      {% endform %}
+    </div>
+  </div>
+</section>

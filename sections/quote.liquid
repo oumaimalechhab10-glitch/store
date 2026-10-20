@@ -1,0 +1,44 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_author = section.settings.author
+  if d_author == blank
+    assign _t = ns | append: '.author' | t
+    unless _t contains 'translation missing'
+      assign d_author = _t
+    endunless
+  endif
+  assign d_quote = section.settings.quote
+  if d_quote == blank
+    assign _t = ns | append: '.quote' | t
+    unless _t contains 'translation missing'
+      assign d_quote = _t
+    endunless
+  endif
+-%}
+<section class="section" style="background: var(--c-bone)">
+  <div class="shell center">
+    <blockquote style="max-width: 52ch; margin-inline: auto">
+      <p class="display-3" style="font-style: italic">“{{ d_quote }}”</p>
+      {%- if d_author != blank -%}
+        <footer class="eyebrow" style="margin-top:22px">{{ d_author }}</footer>
+      {%- endif -%}
+    </blockquote>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Quote",
+  "class": "quote-section",
+  "settings": [
+    { "type": "textarea", "id": "quote", "label": "Quote", "default": "" },
+    { "type": "text", "id": "author", "label": "Author", "default": "" }
+  ],
+  "presets": [{ "name": "Quote" }]
+}
+{% endschema %}

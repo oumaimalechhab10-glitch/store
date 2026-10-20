@@ -1,0 +1,245 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_cta2_label = section.settings.cta2_label
+  if d_cta2_label == blank
+    assign _t = ns | append: '.cta2_label' | t
+    unless _t contains 'translation missing'
+      assign d_cta2_label = _t
+    endunless
+  endif
+  assign d_cta_label = section.settings.cta_label
+  if d_cta_label == blank
+    assign _t = ns | append: '.cta_label' | t
+    unless _t contains 'translation missing'
+      assign d_cta_label = _t
+    endunless
+  endif
+  assign d_eyebrow = section.settings.eyebrow
+  if d_eyebrow == blank
+    assign _t = ns | append: '.eyebrow' | t
+    unless _t contains 'translation missing'
+      assign d_eyebrow = _t
+    endunless
+  endif
+  assign d_text = section.settings.text
+  if d_text == blank
+    assign _t = ns | append: '.text' | t
+    unless _t contains 'translation missing'
+      assign d_text = _t
+    endunless
+  endif
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+-%}
+<section class="hero hero--{{ section.settings.alignment }}" style="min-height: {{ section.settings.height }}vh">
+  {%- comment -%}
+    The backdrop comes from the picker when the merchant has chosen one, and
+    otherwise from the bundled asset, so the theme ships showing its intended
+    hero instead of a bare colour block on a fresh install.
+
+    The two paths cannot share markup: an uploaded image goes through
+    image_url, which resizes and gives us a srcset, while a theme asset goes
+    through asset_url, which does not. Hence the explicit branch, and the
+    hardcoded intrinsic size on the fallback, which is the real size of the
+    file in assets/.
+  {%- endcomment -%}
+  {%- if section.settings.image -%}
+    <div class="hero__media">
+      <img
+        src="{{ section.settings.image | image_url: width: 2000 }}"
+        srcset="{{ section.settings.image | image_url: width: 750 }} 750w,
+                {{ section.settings.image | image_url: width: 1200 }} 1200w,
+                {{ section.settings.image | image_url: width: 1800 }} 1800w,
+                {{ section.settings.image | image_url: width: 2400 }} 2400w"
+        sizes="100vw"
+        alt="{{ section.settings.image.alt | default: d_title | escape }}"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        fetchpriority="high"
+        style="object-position: {{ section.settings.focal_point }}">
+    </div>
+  {%- else -%}
+    {%- comment -%}
+      Empty alt on purpose. The bundled backdrop is decorative fabric, not a
+      product, so describing it with the heading would make a screen reader
+      announce a ring that is not in the picture.
+    {%- endcomment -%}
+    <div class="hero__media">
+      <img
+        src="{{ 'hero-nude.jpg' | asset_url }}"
+        alt=""
+        width="2560"
+        height="1440"
+        fetchpriority="high"
+        style="object-position: {{ section.settings.focal_point }}">
+    </div>
+  {%- endif -%}
+
+  {%- liquid
+    comment
+      The piece is taken from the picker, and failing that from the product the
+      CTA already points at — so a freshly installed theme shows the editorial
+      hero without the merchant having to fill the same product in twice.
+    endcomment
+    assign fp = section.settings.feature_product
+    if fp == blank and section.settings.cta_url contains '/products/'
+      assign fp_handle = section.settings.cta_url | split: '/products/' | last | split: '?' | first
+      assign fp = all_products[fp_handle]
+    endif
+    if fp == blank or fp.handle == blank
+      assign fp = collections.all.products.first
+    endif
+  -%}
+  {%- if section.settings.alignment == 'editorial' and fp != blank and fp.handle != blank -%}
+    {%- liquid
+      assign shot = fp.featured_media
+      assign fp_title = d_title | default: fp.title
+    -%}
+    <div class="hero__scrim" aria-hidden="true"></div>
+    <div class="shell hero__editorial">
+      <div class="hero__copy">
+        {%- if d_eyebrow != blank -%}
+          <p class="hero__eyebrow hero__eyebrow--rule">{{ d_eyebrow }}</p>
+        {%- endif -%}
+        <h1 class="hero__title">{{ fp_title }}</h1>
+        {%- if d_text != blank -%}<p class="hero__text">{{ d_text }}</p>{%- endif -%}
+        {%- if fp.metafields.custom.material != blank -%}
+          <p class="hero__material">{{ fp.metafields.custom.material }}</p>
+        {%- endif -%}
+
+        <p class="hero__price">
+          <span class="price" dir="ltr">{{ fp.price | money }}</span>
+          <span class="hero__cod">{{ 'products.reassurance_cod' | t }}</span>
+        </p>
+
+        <div class="hero__actions">
+          <a href="{{ fp.url }}" class="btn btn--dark btn--lg">
+            {{ d_cta_label | default: fp_title }}
+          </a>
+        </div>
+      </div>
+
+      <a class="hero__piece" href="{{ fp.url }}" aria-label="{{ fp_title | escape }}">
+        <span class="hero__glow" aria-hidden="true"></span>
+        <span class="hero__frame">
+          {%- if shot -%}
+            <img
+              src="{{ shot | image_url: width: 920 }}"
+              srcset="{{ shot | image_url: width: 460 }} 460w, {{ shot | image_url: width: 920 }} 920w"
+              sizes="(max-width: 749px) 90vw, 460px"
+              alt="{{ shot.alt | default: fp_title | escape }}"
+              width="920" height="920" fetchpriority="high">
+          {%- endif -%}
+        </span>
+      </a>
+    </div>
+
+  {%- elsif section.settings.alignment == 'bare' -%}
+    {%- comment -%}
+      Image-only opening. The heading is kept in the markup, out of sight, so
+      the page still states what it sells to a crawler or an assistant.
+    {%- endcomment -%}
+    {%- if d_title != blank -%}<h1 class="visually-hidden">{{ d_title }}</h1>{%- endif -%}
+    {%- if section.settings.cta_url != blank -%}
+      <a class="hero__hit" href="{{ section.settings.cta_url }}"
+         {% if d_title != blank %}aria-label="{{ d_title | escape }}"{% endif %}></a>
+    {%- endif -%}
+  {%- else -%}
+  <div class="shell">
+    <div class="hero__content">
+      {%- if d_eyebrow != blank -%}
+        <p class="hero__eyebrow">{{ d_eyebrow }}</p>
+      {%- endif -%}
+
+      {%- if d_title != blank -%}
+        <h1 class="hero__title">{{ d_title }}</h1>
+      {%- endif -%}
+
+      {%- if d_text != blank -%}
+        <p class="hero__text">{{ d_text }}</p>
+      {%- endif -%}
+
+      {%- if d_cta_label != blank or d_cta2_label != blank -%}
+        {%- liquid
+          assign primary_url = section.settings.cta_url | default: routes.all_products_collection_url
+          assign number = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' | remove: '(' | remove: ')'
+          assign second_url = section.settings.cta2_url
+          if section.settings.cta2_whatsapp and number != blank
+            assign wa_text = 'whatsapp.fab_message' | t: shop: shop.name | url_encode
+            assign second_url = 'https://wa.me/' | append: number | append: '?text=' | append: wa_text
+          endif
+          assign second_url = second_url | default: routes.all_products_collection_url
+        -%}
+        <div class="hero__actions">
+          {%- if d_cta_label != blank -%}
+            <a href="{{ primary_url }}" class="btn btn--light btn--lg">{{ d_cta_label }}</a>
+          {%- endif -%}
+          {%- if d_cta2_label != blank -%}
+            <a
+              href="{{ second_url }}"
+              class="btn {% if section.settings.cta2_whatsapp %}btn--wa{% else %}btn--gold{% endif %} btn--lg"
+              {% if section.settings.cta2_whatsapp %}target="_blank" rel="noopener noreferrer nofollow"{% endif %}>
+              {%- if section.settings.cta2_whatsapp -%}{% render 'icon', icon: 'whatsapp', size: 17 %}{%- endif -%}
+              {{ d_cta2_label }}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "class": "hero-section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Background image",
+      "info": "Leave empty to use the backdrop bundled with the theme." },
+    {
+      "type": "select",
+      "id": "focal_point",
+      "label": "Image focus",
+      "options": [
+        { "value": "center", "label": "Centre" },
+        { "value": "65% center", "label": "Right of centre" },
+        { "value": "35% center", "label": "Left of centre" },
+        { "value": "center top", "label": "Top" }
+      ],
+      "default": "center center"
+    },
+    { "type": "range", "id": "height", "label": "Height", "min": 45, "max": 92, "step": 1, "default": 78, "unit": "vh" },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Content alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Centre" },
+        { "value": "bare", "label": "Image only (no text)" }
+      ],
+      "default": "center"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "" },
+    { "type": "text", "id": "cta_label", "label": "Primary button", "default": "" },
+    { "type": "url", "id": "cta_url", "label": "Primary link" },
+    { "type": "text", "id": "cta2_label", "label": "Secondary button" },
+    { "type": "url", "id": "cta2_url", "label": "Secondary link" },
+    { "type": "checkbox", "id": "cta2_whatsapp", "label": "Secondary button opens WhatsApp", "default": false, "info": "Uses the WhatsApp number from theme settings and ignores the link above." }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

@@ -1,0 +1,177 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_button_label = section.settings.button_label
+  if d_button_label == blank
+    assign _t = ns | append: '.button_label' | t
+    unless _t contains 'translation missing'
+      assign d_button_label = _t
+    endunless
+  endif
+  assign d_eyebrow = section.settings.eyebrow
+  if d_eyebrow == blank
+    assign _t = ns | append: '.eyebrow' | t
+    unless _t contains 'translation missing'
+      assign d_eyebrow = _t
+    endunless
+  endif
+  assign d_label_email = section.settings.label_email
+  if d_label_email == blank
+    assign _t = ns | append: '.label_email' | t
+    unless _t contains 'translation missing'
+      assign d_label_email = _t
+    endunless
+  endif
+  assign d_label_message = section.settings.label_message
+  if d_label_message == blank
+    assign _t = ns | append: '.label_message' | t
+    unless _t contains 'translation missing'
+      assign d_label_message = _t
+    endunless
+  endif
+  assign d_label_name = section.settings.label_name
+  if d_label_name == blank
+    assign _t = ns | append: '.label_name' | t
+    unless _t contains 'translation missing'
+      assign d_label_name = _t
+    endunless
+  endif
+  assign d_label_phone = section.settings.label_phone
+  if d_label_phone == blank
+    assign _t = ns | append: '.label_phone' | t
+    unless _t contains 'translation missing'
+      assign d_label_phone = _t
+    endunless
+  endif
+  assign d_privacy_note = section.settings.privacy_note
+  if d_privacy_note == blank
+    assign _t = ns | append: '.privacy_note' | t
+    unless _t contains 'translation missing'
+      assign d_privacy_note = _t
+    endunless
+  endif
+  assign d_success_message = section.settings.success_message
+  if d_success_message == blank
+    assign _t = ns | append: '.success_message' | t
+    unless _t contains 'translation missing'
+      assign d_success_message = _t
+    endunless
+  endif
+  assign d_text = section.settings.text
+  if d_text == blank
+    assign _t = ns | append: '.text' | t
+    unless _t contains 'translation missing'
+      assign d_text = _t
+    endunless
+  endif
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+  assign d_whatsapp_note = section.settings.whatsapp_note
+  if d_whatsapp_note == blank
+    assign _t = ns | append: '.whatsapp_note' | t
+    unless _t contains 'translation missing'
+      assign d_whatsapp_note = _t
+    endunless
+  endif
+-%}
+{%- assign number = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' | remove: '(' | remove: ')' -%}
+
+<section class="section section--tight">
+  <div class="shell">
+    <div class="two-col">
+      <div>
+        <div class="section-head">
+          {%- if d_eyebrow != blank -%}<p class="eyebrow">{{ d_eyebrow }}</p>{%- endif -%}
+          <h2 class="display-3" style="margin-top:12px">{{ d_title }}</h2>
+          {%- if d_text != blank -%}<div class="rte lead" style="margin-top:14px">{{ d_text }}</div>{%- endif -%}
+        </div>
+
+        {% form 'contact', class: 'contact-form' %}
+          {%- if form.posted_successfully? -%}
+            <p class="form-status form-status--ok">{{ d_success_message }}</p>
+          {%- elsif form.errors -%}
+            <p class="form-status form-status--error">{{ form.errors | default_errors }}</p>
+          {%- endif -%}
+
+          <div class="contact-form__row">
+            <div>
+              <label class="label" for="ContactName">{{ d_label_name }}</label>
+              <input class="input" type="text" id="ContactName" name="contact[name]" value="{{ form.name }}" required>
+            </div>
+            <div>
+              <label class="label" for="ContactPhone">{{ d_label_phone }}</label>
+              <input class="input" type="tel" id="ContactPhone" name="contact[phone]" value="{{ form.phone }}" placeholder="06 00 00 00 00">
+            </div>
+          </div>
+
+          <div>
+            <label class="label" for="ContactEmail">{{ d_label_email }}</label>
+            <input class="input" type="email" id="ContactEmail" name="contact[email]" value="{{ form.email }}" required>
+          </div>
+
+          <div>
+            <label class="label" for="ContactBody">{{ d_label_message }}</label>
+            <textarea class="textarea" id="ContactBody" name="contact[body]" rows="5" required>{{ form.body }}</textarea>
+          </div>
+
+          <button type="submit" class="btn btn--dark">{{ d_button_label }}</button>
+          <p class="small muted">{{ d_privacy_note }}</p>
+        {% endform %}
+      </div>
+
+      <aside>
+        <div class="aside-card">
+          <strong>{{ 'whatsapp.contact_us' | t }}</strong>
+          <p>{{ d_whatsapp_note }}</p>
+          {%- if number != blank -%}
+            <a class="btn btn--wa btn--full" style="margin-top:16px" target="_blank" rel="noopener nofollow"
+               href="https://wa.me/{{ number }}?text={{ 'whatsapp.question_message' | t | url_encode }}">
+              {% render 'icon', icon: 'whatsapp', size: 16 %} {{ settings.whatsapp_number }}
+            </a>
+          {%- endif -%}
+        </div>
+
+        <div class="aside-card" style="margin-top:16px">
+          <strong>{{ 'general.stores' | t }}</strong>
+          <p>
+            {%- if settings.shop_street != blank -%}{{ settings.shop_street }}<br>{%- endif -%}
+            {%- if settings.shop_city != blank -%}{{ settings.shop_city }}, {%- endif -%}
+            {{ 'general.morocco' | t }}<br>
+            {%- if settings.shop_phone != blank -%}<a href="tel:{{ settings.shop_phone | remove: ' ' }}">{{ settings.shop_phone }}</a><br>{%- endif -%}
+            {%- if settings.shop_email != blank -%}<a href="mailto:{{ settings.shop_email }}">{{ settings.shop_email }}</a>{%- endif -%}
+          </p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "class": "contact-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "" },
+    { "type": "text", "id": "label_name", "label": "Name label", "default": "" },
+    { "type": "text", "id": "label_phone", "label": "Phone label", "default": "" },
+    { "type": "text", "id": "label_email", "label": "E-mail label", "default": "" },
+    { "type": "text", "id": "label_message", "label": "Message label", "default": "" },
+    { "type": "text", "id": "button_label", "label": "Button", "default": "" },
+    { "type": "text", "id": "success_message", "label": "Success message", "default": "" },
+    { "type": "text", "id": "privacy_note", "label": "Privacy note", "default": "" },
+    { "type": "textarea", "id": "whatsapp_note", "label": "WhatsApp note", "default": "" }
+  ],
+  "presets": [{ "name": "Contact form" }]
+}
+{% endschema %}

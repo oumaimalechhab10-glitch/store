@@ -1,0 +1,84 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign ns = 'defaults.chrome_' | append: section.id
+  assign d_button_label = section.settings.button_label
+  if d_button_label == blank
+    assign _t = ns | append: '.button_label' | t
+    unless _t contains 'translation missing'
+      assign d_button_label = _t
+    endunless
+  endif
+  assign d_eyebrow = section.settings.eyebrow
+  if d_eyebrow == blank
+    assign _t = ns | append: '.eyebrow' | t
+    unless _t contains 'translation missing'
+      assign d_eyebrow = _t
+    endunless
+  endif
+  assign d_note = section.settings.note
+  if d_note == blank
+    assign _t = ns | append: '.note' | t
+    unless _t contains 'translation missing'
+      assign d_note = _t
+    endunless
+  endif
+  assign d_text = section.settings.text
+  if d_text == blank
+    assign _t = ns | append: '.text' | t
+    unless _t contains 'translation missing'
+      assign d_text = _t
+    endunless
+  endif
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+-%}
+<section class="section newsletter">
+  <div class="shell center">
+    {%- if d_eyebrow != blank -%}
+      <p class="eyebrow" style="color: var(--c-goldsoft)">{{ d_eyebrow }}</p>
+    {%- endif -%}
+    <h2 style="margin-top:14px">{{ d_title }}</h2>
+    {%- if d_text != blank -%}<p>{{ d_text }}</p>{%- endif -%}
+
+    {% form 'customer', class: 'newsletter__form' %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <input
+        type="email"
+        name="contact[email]"
+        placeholder="{{ 'newsletter.placeholder' | t }}"
+        aria-label="{{ 'newsletter.placeholder' | t }}"
+        required>
+      <button type="submit" class="btn btn--gold">{{ d_button_label | default: 'OK' }}</button>
+
+      {%- if form.posted_successfully? -%}
+        <p class="form-status form-status--ok" style="flex-basis:100%">{{ 'newsletter.success' | t }}</p>
+      {%- elsif form.errors -%}
+        <p class="form-status form-status--error" style="flex-basis:100%">{{ form.errors | default_errors }}</p>
+      {%- endif -%}
+    {% endform %}
+
+    {%- if d_note != blank -%}
+      <p class="newsletter__note">{{ d_note }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "class": "newsletter-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "" },
+    { "type": "text", "id": "button_label", "label": "Button", "default": "" },
+    { "type": "text", "id": "note", "label": "Note", "default": "" }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

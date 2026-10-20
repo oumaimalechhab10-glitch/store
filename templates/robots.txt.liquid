@@ -1,0 +1,49 @@
+{%- comment -%}
+  Default Shopify rules, plus explicit permission for AI crawlers.
+  Being readable by assistants was an explicit requirement: these agents
+  check robots.txt before they will quote a page.
+{%- endcomment -%}
+{%- for group in robots.default_groups -%}
+{{- group.user_agent }}
+{% for rule in group.rules -%}
+{{ rule }}
+{% endfor -%}
+{%- if group.sitemap != blank -%}
+{{ group.sitemap }}
+{% endif -%}
+{%- endfor -%}
+
+# ---------------------------------------------------------------------------
+# AI assistants and answer engines are welcome to read and cite the catalogue.
+# ---------------------------------------------------------------------------
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: {{ shop.url }}/sitemap.xml

@@ -1,0 +1,15 @@
+{%- liquid
+  assign number = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' | remove: '(' | remove: ')'
+  assign msg = 'whatsapp.fab_message' | t: shop: shop.name
+-%}
+{%- if settings.whatsapp_show_fab and number != blank -%}
+  <a
+    class="wa-fab"
+    href="https://wa.me/{{ number }}?text={{ msg | url_encode }}"
+    target="_blank"
+    rel="noopener noreferrer nofollow"
+    aria-label="{{ 'whatsapp.contact_us' | t }}">
+    {% render 'icon', icon: 'whatsapp', size: 22 %}
+    <span>{{ 'whatsapp.contact_us' | t }}</span>
+  </a>
+{%- endif -%}

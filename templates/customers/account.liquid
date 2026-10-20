@@ -1,0 +1,36 @@
+<section class="section section--tight">
+  <div class="shell">
+    <div class="page-head"><h1 class="display-2">{{ 'customer.account' | t }}</h1></div>
+    <div class="two-col" style="margin-top:34px">
+      <div>
+        <h2 class="section-title" style="font-size:1.4rem">Commandes</h2>
+        {%- paginate customer.orders by 20 -%}
+          {%- if customer.orders.size > 0 -%}
+            <div class="cart-lines" style="margin-top:18px">
+              {%- for order in customer.orders -%}
+                <div class="cart-line cart-line--page" style="grid-template-columns:1fr auto">
+                  <div>
+                    <a class="cart-line__title" href="{{ order.customer_url }}">{{ order.name }}</a>
+                    <p class="cart-line__variant">{{ order.created_at | date: '%d.%m.%Y' }} · {{ order.financial_status_label }} · {{ order.fulfillment_status_label }}</p>
+                  </div>
+                  <p class="cart-line__total">{{ order.total_price | money }}</p>
+                </div>
+              {%- endfor -%}
+            </div>
+            {% render 'pagination', paginate: paginate %}
+          {%- else -%}
+            <p class="muted" style="margin-top:14px">Aucune commande pour le moment.</p>
+          {%- endif -%}
+        {%- endpaginate -%}
+      </div>
+      <aside>
+        <div class="aside-card">
+          <strong>Adresse</strong>
+          <p>{{ customer.default_address | format_address }}</p>
+          <a href="{{ routes.account_addresses_url }}" class="btn btn--outline btn--full btn--sm" style="margin-top:14px">Gérer mes adresses</a>
+          <a href="{{ routes.account_logout_url }}" class="btn btn--ghost btn--full btn--sm">Se déconnecter</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>

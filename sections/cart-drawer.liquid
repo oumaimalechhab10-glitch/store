@@ -1,0 +1,12 @@
+{%- comment -%}
+  Thin section wrapper so the drawer can be re-rendered through the
+  Section Rendering API (/cart?sections=cart-drawer) after every cart mutation.
+{%- endcomment -%}
+{% render 'cart-drawer' %}
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": []
+}
+{% endschema %}

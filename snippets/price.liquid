@@ -1,0 +1,35 @@
+{%- comment -%}
+  Price display with compare-at handling.
+  Usage: {% render 'price', product: product, variant: current_variant, price_size: 'lg' %}
+  The modifier is named price_size, not size: `size` collides with Liquid's
+  built-in .size accessor and resolves unpredictably when left unset.
+{%- endcomment -%}
+{%- liquid
+  if variant
+    assign target = variant
+  else
+    assign target = product
+  endif
+
+  assign price = target.price | default: 0
+  assign compare = target.compare_at_price | default: 0
+  assign on_sale = false
+  if compare > price
+    assign on_sale = true
+  endif
+-%}
+<span class="price-group{% if price_size %} price-group--{{ price_size }}{% endif %}">
+  {%- if product.price_varies and variant == nil -%}
+    <span class="price">{{ 'products.from_price' | t: price: product.price_min | money }}</span>
+  {%- else -%}
+    <span class="price{% if on_sale %} price--sale{% endif %}">{{ price | money }}</span>
+  {%- endif -%}
+
+  {%- if on_sale -%}
+    <s class="price--compare">{{ compare | money }}</s>
+    {%- if show_savings -%}
+      {%- assign saved = compare | minus: price | times: 100.0 | divided_by: compare | round -%}
+      <span class="badge badge--sale">-{{ saved }}%</span>
+    {%- endif -%}
+  {%- endif -%}
+</span>

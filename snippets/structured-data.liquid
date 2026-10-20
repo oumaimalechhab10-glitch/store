@@ -1,0 +1,242 @@
+{%- comment -%}
+  JSON-LD graph. Shopify only ships Product markup inside some themes, so the
+  shop, breadcrumbs, search action, store list and FAQ are all emitted here —
+  this is what search engines and AI assistants actually read.
+{%- endcomment -%}
+{%- liquid
+  assign wa = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-'
+-%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "JewelryStore",
+  "@id": {{ shop.url | append: '#organization' | json }},
+  "name": {{ shop.name | json }},
+  "url": {{ shop.url | json }},
+  {% if settings.logo %}"logo": {{ settings.logo | image_url: width: 512 | prepend: 'https:' | json }},{% endif %}
+  "description": {{ shop.description | default: settings.ai_summary | json }},
+  "currenciesAccepted": "MAD",
+  "paymentAccepted": {{ 'ai.payment_accepted' | t | json }},
+  "areaServed": { "@type": "Country", "name": "Morocco" },
+  {%- comment -%}
+    Only emit what the merchant actually filled in. An empty streetAddress or
+    telephone is worse than no property at all: it is a claim with nothing
+    behind it, and search engines flag it.
+  {%- endcomment -%}
+  {% if settings.shop_street != blank or settings.shop_city != blank %}
+  "address": {
+    "@type": "PostalAddress",
+    {% if settings.shop_street != blank %}"streetAddress": {{ settings.shop_street | json }},{% endif %}
+    {% if settings.shop_city != blank %}"addressLocality": {{ settings.shop_city | json }},{% endif %}
+    "addressCountry": "MA"
+  },
+  {% endif %}
+  {% if settings.shop_phone != blank %}"telephone": {{ settings.shop_phone | json }},{% endif %}
+  {% if settings.shop_email != blank %}"email": {{ settings.shop_email | json }},{% endif %}
+  {% if settings.opening_hours != blank %}"openingHours": {{ settings.opening_hours | json }},{% endif %}
+  {% if settings.whatsapp_number != blank %}
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "sales",
+    "telephone": {{ settings.whatsapp_number | json }},
+    "url": {{ 'https://wa.me/' | append: wa | json }},
+    "availableLanguage": ["fr", "ar", "en"],
+    "areaServed": "MA"
+  },
+  {% endif %}
+  "sameAs": [
+    {%- if settings.social_instagram != blank %}{{ settings.social_instagram | json }},{% endif -%}
+    {%- if settings.social_facebook != blank %}{{ settings.social_facebook | json }},{% endif -%}
+    {%- if settings.social_tiktok != blank %}{{ settings.social_tiktok | json }},{% endif -%}
+    {{ shop.url | json }}
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": {{ shop.name | json }},
+  "url": {{ shop.url | json }},
+  "inLanguage": {{ request.locale.iso_code | json }},
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": { "@type": "EntryPoint", "urlTemplate": "{{ shop.url }}{{ routes.search_url }}?q={search_term_string}" },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+{%- if template.name == 'product' -%}
+  {%- assign variant = product.selected_or_first_available_variant -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "url": {{ shop.url | append: product.url | json }},
+    "sku": {{ variant.sku | default: product.id | json }},
+    "description": {{ product.description | strip_html | truncate: 1200 | json }},
+    "brand": { "@type": "Brand", "name": {{ product.vendor | default: shop.name | json }} },
+    {% if product.featured_media %}"image": [{{ product.featured_media.preview_image | image_url: width: 1200 | prepend: 'https:' | json }}],{% endif %}
+    {% if product.metafields.custom.material != blank %}"material": {{ product.metafields.custom.material | json }},{% endif %}
+    "category": {{ product.type | default: 'Jewelry' | json }},
+    "offers": {
+      "@type": "Offer",
+      "url": {{ shop.url | append: product.url | json }},
+      "priceCurrency": {{ cart.currency.iso_code | json }},
+      "price": "{{ variant.price | divided_by: 100.0 }}",
+      "availability": "https://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}",
+      "itemCondition": "https://schema.org/NewCondition",
+      "seller": { "@type": "Organization", "name": {{ shop.name | json }} },
+      "areaServed": { "@type": "Country", "name": "Morocco" },
+      "eligibleRegion": { "@type": "Country", "name": "Morocco" },
+      "acceptedPaymentMethod": [
+        { "@type": "PaymentMethod", "name": "Cash on delivery" }
+      ],
+      "shippingDetails": {
+        "@type": "OfferShippingDetails",
+        "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "MA" },
+        "shippingRate": {
+          "@type": "MonetaryAmount",
+          "value": "{{ settings.flat_shipping_rate | default: 0 }}",
+          "currency": "MAD"
+        },
+        "deliveryTime": {
+          "@type": "ShippingDeliveryTime",
+          "handlingTime": { "@type": "QuantitativeValue", "minValue": 0, "maxValue": 1, "unitCode": "DAY" },
+          "transitTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 5, "unitCode": "DAY" }
+        }
+      },
+      "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "applicableCountry": "MA",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays": {{ settings.return_days | default: 14 }},
+        "returnMethod": "https://schema.org/ReturnByMail",
+        "returnFees": "https://schema.org/FreeReturn"
+      }
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": {{ 'general.home' | t | json }}, "item": {{ shop.url | json }} },
+      {%- if collection -%}
+      { "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": {{ shop.url | append: collection.url | json }} },
+      { "@type": "ListItem", "position": 3, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
+      {%- else -%}
+      { "@type": "ListItem", "position": 2, "name": {{ product.title | json }}, "item": {{ shop.url | append: product.url | json }} }
+      {%- endif -%}
+    ]
+  }
+  </script>
+{%- endif -%}
+
+{%- if template.name == 'collection' and collection.products.size > 0 -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": {{ collection.title | json }},
+    "url": {{ shop.url | append: collection.url | json }},
+    "description": {{ collection.description | strip_html | truncate: 400 | json }},
+    "isPartOf": { "@type": "WebSite", "name": {{ shop.name | json }}, "url": {{ shop.url | json }} },
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": {{ collection.products_count }},
+      "itemListElement": [
+        {%- for p in collection.products limit: 24 -%}
+        {
+          "@type": "ListItem",
+          "position": {{ forloop.index }},
+          "url": {{ shop.url | append: p.url | json }},
+          "name": {{ p.title | json }}
+        }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  }
+  </script>
+{%- endif -%}
+
+{%- if template.name == 'article' -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": {{ article.title | json }},
+    "articleBody": {{ article.content | strip_html | truncate: 2000 | json }},
+    "datePublished": {{ article.published_at | date: '%Y-%m-%d' | json }},
+    "author": { "@type": "Organization", "name": {{ shop.name | json }} },
+    "publisher": { "@type": "Organization", "name": {{ shop.name | json }} },
+    "mainEntityOfPage": {{ canonical_url | json }}
+  }
+  </script>
+{%- endif -%}
+
+{%- comment -%}
+  Guide pages → HowTo.
+
+  A size guide or a care guide is literally a procedure, and HowTo is the
+  schema answer engines quote for "how do I …" questions. The steps are read
+  out of the page's own <h2> headings rather than written a second time, so
+  the markup cannot drift away from the visible copy — a mismatch there is a
+  manual-action risk, not merely a wasted opportunity.
+
+  Restricted to handles that really are guides: claiming HowTo on a legal
+  notice is spam.
+{%- endcomment -%}
+{%- liquid
+  assign is_guide = false
+  if template.name == 'page'
+    assign h = page.handle
+    if h contains 'guide' or h == 'entretien' or h == 'nos-matieres'
+      assign is_guide = true
+    endif
+  endif
+-%}
+{%- if is_guide -%}
+  {%- assign chunks = page.content | split: '<h2>' -%}
+  {%- assign step_count = chunks.size | minus: 1 -%}
+  {%- if step_count >= 2 -%}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": {{ page.title | json }},
+      "description": {{ page.metafields.custom.subtitle | default: shop.description | strip_html | truncate: 200 | json }},
+      "url": {{ request.origin | append: page.url | json }},
+      "inLanguage": {{ request.locale.iso_code | json }},
+      {%- if page.metafields.custom.hero -%}
+      "image": {{ page.metafields.custom.hero | image_url: width: 1400 | prepend: 'https:' | json }},
+      {%- endif -%}
+      "totalTime": "PT5M",
+      "estimatedCost": { "@type": "MonetaryAmount", "currency": "MAD", "value": "0" },
+      "step": [
+        {%- for chunk in chunks offset: 1 -%}
+          {%- assign heading = chunk | split: '</h2>' | first | strip_html | strip -%}
+          {%- assign rest = chunk | split: '</h2>' | last -%}
+          {%- assign text = rest | strip_html | strip | truncate: 450 -%}
+          {%- if heading != blank and text != blank -%}
+          {
+            "@type": "HowToStep",
+            "position": {{ forloop.index }},
+            "name": {{ heading | json }},
+            "text": {{ text | json }},
+            "url": {{ request.origin | append: page.url | append: '#etape-' | append: forloop.index | json }}
+          }{%- unless forloop.last -%},{%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ],
+      "publisher": { "@id": {{ request.origin | append: '/#organization' | json }} }
+    }
+    </script>
+  {%- endif -%}
+{%- endif -%}

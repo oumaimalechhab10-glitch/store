@@ -1,0 +1,111 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+-%}
+<section class="section">
+  <div class="shell">
+    {%- if section.settings.title != blank -%}
+      <div class="section-head center">
+        <h2 class="section-title">{{ section.settings.title }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="mosaic">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign bns = ns | append: '.' | append: forloop.index
+          assign db_cta = block.settings.cta
+          if db_cta == blank
+            assign _t = bns | append: '_cta' | t
+            unless _t contains 'translation missing'
+              assign db_cta = _t
+            endunless
+          endif
+          assign db_eyebrow = block.settings.eyebrow
+          if db_eyebrow == blank
+            assign _t = bns | append: '_eyebrow' | t
+            unless _t contains 'translation missing'
+              assign db_eyebrow = _t
+            endunless
+          endif
+          assign db_title = block.settings.title
+          if db_title == blank
+            assign _t = bns | append: '_title' | t
+            unless _t contains 'translation missing'
+              assign db_title = _t
+            endunless
+          endif
+        -%}
+        <a class="tile tile--{{ block.settings.size }} reveal" href="{{ block.settings.link }}" {{ block.shopify_attributes }}>
+          {%- if block.settings.image -%}
+            <img
+              src="{{ block.settings.image | image_url: width: 1200 }}"
+              srcset="{{ block.settings.image | image_url: width: 600 }} 600w, {{ block.settings.image | image_url: width: 1200 }} 1200w"
+              sizes="(max-width: 767px) 100vw, 33vw"
+              alt="{{ block.settings.image.alt | default: db_title | escape }}"
+              loading="lazy"
+              width="{{ block.settings.image.width }}"
+              height="{{ block.settings.image.height }}">
+          {%- else -%}
+            {{ 'lifestyle-1' | placeholder_svg_tag }}
+          {%- endif -%}
+
+          <span class="tile__overlay">
+            {%- if db_eyebrow != blank -%}<small>{{ db_eyebrow }}</small>{%- endif -%}
+            {%- if db_title != blank -%}<strong>{{ db_title }}</strong>{%- endif -%}
+            {%- if db_cta != blank -%}<em>{{ db_cta }}</em>{%- endif -%}
+          </span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Editorial mosaic",
+  "class": "mosaic-section",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading" }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Tile",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        {
+          "type": "select",
+          "id": "size",
+          "label": "Size",
+          "options": [
+            { "value": "tall", "label": "Tall (1 column, 2 rows)" },
+            { "value": "square", "label": "Square" },
+            { "value": "wide", "label": "Wide (2 columns)" }
+          ],
+          "default": "square"
+        },
+        { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "text", "id": "cta", "label": "Link label", "default": "" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Editorial mosaic",
+      "blocks": [
+        { "type": "tile", "settings": { "size": "tall" } },
+        { "type": "tile", "settings": { "size": "square" } },
+        { "type": "tile", "settings": { "size": "square" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

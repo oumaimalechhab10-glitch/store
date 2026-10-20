@@ -1,0 +1,23 @@
+<section class="section section--tight">
+  <div class="shell">
+    <div class="page-head"><h1 class="display-2">{{ order.name }}</h1>
+      <p class="small muted" style="margin-top:8px">{{ order.created_at | date: '%d %B %Y' }} · {{ order.financial_status_label }}</p>
+    </div>
+    <div class="cart-lines" style="margin-top:30px">
+      {%- for line in order.line_items -%}
+        <div class="cart-line cart-line--page" style="grid-template-columns:1fr auto">
+          <div>
+            <span class="cart-line__title">{{ line.title }}</span>
+            <p class="cart-line__variant">× {{ line.quantity }}</p>
+          </div>
+          <p class="cart-line__total">{{ line.final_line_price | money }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+    <div class="cart-summary" style="max-width:360px; margin-left:auto; margin-top:24px">
+      <div class="cart-summary__row"><span>{{ 'cart.subtotal' | t }}</span><span>{{ order.subtotal_price | money }}</span></div>
+      <div class="cart-summary__row"><span>{{ 'cart.shipping' | t }}</span><span>{{ order.shipping_price | money }}</span></div>
+      <div class="cart-summary__row cart-summary__row--total"><span>{{ 'cart.total' | t }}</span><span>{{ order.total_price | money }}</span></div>
+    </div>
+  </div>
+</section>

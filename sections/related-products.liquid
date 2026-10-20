@@ -1,0 +1,77 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+-%}
+<section class="section" style="background: {% if section.settings.background == 'bone' %}var(--c-bone){% else %}transparent{% endif %}">
+  <div class="shell">
+    <div class="section-head{% if section.settings.align == 'center' %} center{% endif %}">
+      <h2 class="section-title">{{ d_title }}</h2>
+    </div>
+
+    {%- if recommendations.performed and recommendations.products_count > 0 -%}
+      <div class="product-grid product-grid--4">
+        {%- for product in recommendations.products -%}
+          {% render 'product-card', product: product, index: forloop.index %}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div
+        class="product-grid product-grid--4"
+        data-recommendations
+        data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}">
+        {%- assign fallback = product.collections | first -%}
+        {%- if fallback != blank -%}
+          {%- assign shown = 0 -%}
+          {%- for item in fallback.products -%}
+            {%- if item.id != product.id and shown < section.settings.products_to_show -%}
+              {% render 'product-card', product: item, index: forloop.index %}
+              {%- assign shown = shown | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Related products",
+  "class": "related-section",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "" },
+    { "type": "range", "id": "products_to_show", "label": "Products", "min": 2, "max": 8, "step": 1, "default": 4 },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Heading alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Centre" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "White" },
+        { "value": "bone", "label": "Bone" }
+      ],
+      "default": "bone"
+    }
+  ]
+}
+{% endschema %}

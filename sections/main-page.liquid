@@ -1,0 +1,54 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_eyebrow = section.settings.eyebrow
+  if d_eyebrow == blank
+    assign _t = ns | append: '.eyebrow' | t
+    unless _t contains 'translation missing'
+      assign d_eyebrow = _t
+    endunless
+  endif
+-%}
+<div class="shell">
+  {% render 'breadcrumbs' %}
+</div>
+
+<section class="section section--tight">
+  <div class="shell">
+    <div class="page-head{% if section.settings.align == 'center' %} center{% endif %}">
+      {%- if d_eyebrow != blank -%}<p class="eyebrow">{{ d_eyebrow }}</p>{%- endif -%}
+      <h1 class="display-2" style="margin-top:12px">{{ page.title }}</h1>
+    </div>
+
+    {%- if page.content != blank -%}
+      <div class="rte page-content{% if section.settings.narrow %} page-content--narrow{% endif %}">
+        {{ page.content }}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Page",
+  "class": "main-page-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "checkbox", "id": "narrow", "label": "Narrow reading column", "default": true },
+    {
+      "type": "select",
+      "id": "align",
+      "label": "Title alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Centre" }
+      ],
+      "default": "center"
+    }
+  ]
+}
+{% endschema %}

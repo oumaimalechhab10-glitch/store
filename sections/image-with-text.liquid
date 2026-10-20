@@ -1,0 +1,120 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_cta_label = section.settings.cta_label
+  if d_cta_label == blank
+    assign _t = ns | append: '.cta_label' | t
+    unless _t contains 'translation missing'
+      assign d_cta_label = _t
+    endunless
+  endif
+  assign d_eyebrow = section.settings.eyebrow
+  if d_eyebrow == blank
+    assign _t = ns | append: '.eyebrow' | t
+    unless _t contains 'translation missing'
+      assign d_eyebrow = _t
+    endunless
+  endif
+  assign d_text = section.settings.text
+  if d_text == blank
+    assign _t = ns | append: '.text' | t
+    unless _t contains 'translation missing'
+      assign d_text = _t
+    endunless
+  endif
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+-%}
+<section class="split{% if section.settings.media_position == 'right' %} split--reverse{% endif %}">
+  <div class="split__media">
+    {%- if section.settings.image -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 1400 }}"
+        srcset="{{ section.settings.image | image_url: width: 700 }} 700w, {{ section.settings.image | image_url: width: 1400 }} 1400w"
+        sizes="(max-width: 899px) 100vw, 50vw"
+        alt="{{ section.settings.image.alt | default: d_title | escape }}"
+        loading="lazy"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}">
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag }}
+    {%- endif -%}
+  </div>
+
+  <div class="split__body">
+    {%- if d_eyebrow != blank -%}<p class="eyebrow">{{ d_eyebrow }}</p>{%- endif -%}
+    {%- if d_title != blank -%}<h2>{{ d_title }}</h2>{%- endif -%}
+    {%- if d_text != blank -%}<div class="rte lead">{{ d_text }}</div>{%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="stat-row">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign bns = ns | append: '.' | append: forloop.index
+            assign db_label = block.settings.label
+            if db_label == blank
+              assign _t = bns | append: '_label' | t
+              unless _t contains 'translation missing'
+                assign db_label = _t
+              endunless
+            endif
+          -%}
+          <div class="stat" {{ block.shopify_attributes }}>
+            <strong>{{ block.settings.value }}</strong>
+            <span>{{ db_label }}</span>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if d_cta_label != blank -%}
+      <a href="{{ section.settings.cta_url }}" class="btn btn--dark">{{ d_cta_label }}</a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "class": "split-section",
+  "max_blocks": 3,
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    {
+      "type": "select",
+      "id": "media_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "" },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "" },
+    { "type": "url", "id": "cta_url", "label": "Button link" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Statistic",
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "6" },
+        { "type": "text", "id": "label", "label": "Label", "default": "" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Image with text" }]
+}
+{% endschema %}

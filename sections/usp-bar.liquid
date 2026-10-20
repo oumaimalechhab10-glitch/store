@@ -1,0 +1,85 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+-%}
+<section class="usp">
+  <div class="shell" style="padding-inline:0">
+    <div class="usp__grid">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign bns = ns | append: '.' | append: forloop.index
+          assign db_text = block.settings.text
+          if db_text == blank
+            assign _t = bns | append: '_text' | t
+            unless _t contains 'translation missing'
+              assign db_text = _t
+            endunless
+          endif
+          assign db_title = block.settings.title
+          if db_title == blank
+            assign _t = bns | append: '_title' | t
+            unless _t contains 'translation missing'
+              assign db_title = _t
+            endunless
+          endif
+        -%}
+        <div class="usp__item" {{ block.shopify_attributes }}>
+          {% render 'icon', icon: block.settings.icon, size: 23 %}
+          <div>
+            <strong>{{ db_title }}</strong>
+            <span>{{ db_text }}</span>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Reassurance bar",
+  "class": "usp-section",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Argument",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "truck", "label": "Delivery" },
+            { "value": "cash", "label": "Cash" },
+            { "value": "shield", "label": "Warranty" },
+            { "value": "gift", "label": "Gift" },
+            { "value": "return", "label": "Returns" },
+            { "value": "sparkle", "label": "Sparkle" },
+            { "value": "phone", "label": "Phone" },
+            { "value": "whatsapp", "label": "WhatsApp" }
+          ],
+          "default": "truck"
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "" },
+        { "type": "text", "id": "text", "label": "Text", "default": "" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reassurance bar",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "truck", "title": "Livraison 24-48h", "text": "Partout au Maroc" } },
+        { "type": "item", "settings": { "icon": "cash", "title": "Paiement à la livraison", "text": "Vous payez en recevant" } },
+        { "type": "item", "settings": { "icon": "shield", "title": "Garantie 12 mois", "text": "Contre le ternissement" } },
+        { "type": "item", "settings": { "icon": "gift", "title": "Écrin offert", "text": "Sur chaque commande" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

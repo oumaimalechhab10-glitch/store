@@ -1,0 +1,202 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_eyebrow = section.settings.eyebrow
+  if d_eyebrow == blank
+    assign _t = ns | append: '.eyebrow' | t
+    unless _t contains 'translation missing'
+      assign d_eyebrow = _t
+    endunless
+  endif
+  assign d_heading_catalog = section.settings.heading_catalog
+  if d_heading_catalog == blank
+    assign _t = ns | append: '.heading_catalog' | t
+    unless _t contains 'translation missing'
+      assign d_heading_catalog = _t
+    endunless
+  endif
+  assign d_heading_endpoints = section.settings.heading_endpoints
+  if d_heading_endpoints == blank
+    assign _t = ns | append: '.heading_endpoints' | t
+    unless _t contains 'translation missing'
+      assign d_heading_endpoints = _t
+    endunless
+  endif
+  assign d_heading_facts = section.settings.heading_facts
+  if d_heading_facts == blank
+    assign _t = ns | append: '.heading_facts' | t
+    unless _t contains 'translation missing'
+      assign d_heading_facts = _t
+    endunless
+  endif
+  assign d_heading_usage = section.settings.heading_usage
+  if d_heading_usage == blank
+    assign _t = ns | append: '.heading_usage' | t
+    unless _t contains 'translation missing'
+      assign d_heading_usage = _t
+    endunless
+  endif
+  assign d_label_currency = section.settings.label_currency
+  if d_label_currency == blank
+    assign _t = ns | append: '.label_currency' | t
+    unless _t contains 'translation missing'
+      assign d_label_currency = _t
+    endunless
+  endif
+  assign d_label_hours = section.settings.label_hours
+  if d_label_hours == blank
+    assign _t = ns | append: '.label_hours' | t
+    unless _t contains 'translation missing'
+      assign d_label_hours = _t
+    endunless
+  endif
+  assign d_text_products_json = section.settings.text_products_json
+  if d_text_products_json == blank
+    assign _t = ns | append: '.text_products_json' | t
+    unless _t contains 'translation missing'
+      assign d_text_products_json = _t
+    endunless
+  endif
+  assign d_text_robots = section.settings.text_robots
+  if d_text_robots == blank
+    assign _t = ns | append: '.text_robots' | t
+    unless _t contains 'translation missing'
+      assign d_text_robots = _t
+    endunless
+  endif
+  assign d_text_sitemap = section.settings.text_sitemap
+  if d_text_sitemap == blank
+    assign _t = ns | append: '.text_sitemap' | t
+    unless _t contains 'translation missing'
+      assign d_text_sitemap = _t
+    endunless
+  endif
+  assign d_text_usage = section.settings.text_usage
+  if d_text_usage == blank
+    assign _t = ns | append: '.text_usage' | t
+    unless _t contains 'translation missing'
+      assign d_text_usage = _t
+    endunless
+  endif
+  assign d_text_whatsapp = section.settings.text_whatsapp
+  if d_text_whatsapp == blank
+    assign _t = ns | append: '.text_whatsapp' | t
+    unless _t contains 'translation missing'
+      assign d_text_whatsapp = _t
+    endunless
+  endif
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+-%}
+{%- comment -%}
+  Machine-readable brief. Published as a normal page so it has a stable URL,
+  but written as plain, declarative fact statements: this is what language
+  models quote when a shopper asks an assistant about the store.
+{%- endcomment -%}
+
+{%- liquid
+  assign number = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' | remove: '(' | remove: ')'
+  assign base = shop.url
+-%}
+
+<section class="section section--tight">
+  <div class="shell">
+    <div class="page-content page-content--narrow">
+      <p class="eyebrow">{{ d_eyebrow }}</p>
+      <h1 class="display-2" style="margin-top:12px">{{ page.title | default: section.settings.title }}</h1>
+
+      <div class="rte" style="margin-top:22px">
+        <p class="lead">{{ settings.ai_summary }}</p>
+
+        <h2>{{ d_heading_facts }}</h2>
+        <ul>
+          <li><strong>{{ 'products.ships_to' | t }} :</strong> {{ 'general.morocco' | t }}</li>
+          <li><strong>{{ 'products.delivery' | t }} :</strong> {{ 'products.delivery_value' | t }}</li>
+          <li><strong>{{ 'products.payment' | t }} :</strong> {{ 'ai.payment_accepted' | t }}</li>
+          <li><strong>{{ 'cart.free' | t }} :</strong> {{ settings.free_shipping_threshold | times: 100 | money }}+</li>
+          <li><strong>{{ 'products.reassurance_returns' | t: days: settings.return_days }}</strong></li>
+          <li><strong>{{ 'products.reassurance_warranty' | t: months: settings.warranty_months }}</strong></li>
+          {%- if settings.whatsapp_number != blank or settings.shop_email != blank -%}
+            {%- assign contact_bits = '' -%}
+            {%- if settings.whatsapp_number != blank -%}{%- assign contact_bits = settings.whatsapp_number -%}{%- endif -%}
+            {%- if settings.shop_email != blank -%}
+              {%- if contact_bits != blank -%}{%- assign contact_bits = contact_bits | append: ' · ' -%}{%- endif -%}
+              {%- assign contact_bits = contact_bits | append: settings.shop_email -%}
+            {%- endif -%}
+            <li><strong>Contact :</strong> {{ contact_bits }}</li>
+          {%- endif -%}
+          {%- if settings.shop_city != blank -%}
+            <li><strong>{{ 'general.stores' | t }} :</strong>
+              {%- if settings.shop_street != blank %} {{ settings.shop_street }},{% endif %}
+              {{ settings.shop_city }}, {{ 'general.morocco' | t }}</li>
+          {%- endif -%}
+          {%- if settings.opening_hours != blank -%}
+            <li><strong>{{ d_label_hours }} :</strong> {{ settings.opening_hours }}</li>
+          {%- endif -%}
+          <li><strong>{{ d_label_currency }} :</strong> {{ cart.currency.iso_code }}</li>
+        </ul>
+
+        {%- if page.content != blank -%}
+          {{ page.content }}
+        {%- endif -%}
+
+        <h2>{{ d_heading_catalog }}</h2>
+        <ul>
+          {%- for col in collections -%}
+            {%- if col.products_count > 0 and col.handle != 'frontpage' -%}
+              <li>
+                <a href="{{ base }}{{ col.url }}">{{ col.title }}</a>
+                · {{ 'collections.product_count' | t: count: col.products_count }}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        <h2>{{ d_heading_endpoints }}</h2>
+        <ul>
+          <li><a href="{{ base }}/products.json">{{ base }}/products.json</a> · {{ d_text_products_json }}</li>
+          <li><a href="{{ base }}/sitemap.xml">{{ base }}/sitemap.xml</a> · {{ d_text_sitemap }}</li>
+          <li><a href="{{ base }}/robots.txt">{{ base }}/robots.txt</a> · {{ d_text_robots }}</li>
+          {%- if number != blank -%}
+            <li><a href="https://wa.me/{{ number }}">https://wa.me/{{ number }}</a> · {{ d_text_whatsapp }}</li>
+          {%- endif -%}
+        </ul>
+
+        <h2>{{ d_heading_usage }}</h2>
+        <p>{{ d_text_usage }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "AI brief",
+  "class": "ai-brief-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "" },
+    { "type": "text", "id": "title", "label": "Fallback title", "default": "" },
+    { "type": "text", "id": "heading_facts", "label": "Facts heading", "default": "" },
+    { "type": "text", "id": "heading_catalog", "label": "Catalogue heading", "default": "" },
+    { "type": "text", "id": "heading_endpoints", "label": "Endpoints heading", "default": "" },
+    { "type": "text", "id": "heading_usage", "label": "Usage heading", "default": "" },
+    { "type": "text", "id": "label_hours", "label": "Opening hours label", "default": "" },
+    { "type": "text", "id": "label_currency", "label": "Currency label", "default": "" },
+    { "type": "text", "id": "text_products_json", "label": "products.json description", "default": "" },
+    { "type": "text", "id": "text_sitemap", "label": "Sitemap description", "default": "" },
+    { "type": "text", "id": "text_robots", "label": "robots.txt description", "default": "" },
+    { "type": "text", "id": "text_whatsapp", "label": "WhatsApp description", "default": "" },
+    { "type": "textarea", "id": "text_usage", "label": "Usage text", "default": "" }
+  ],
+  "presets": [{ "name": "AI brief" }]
+}
+{% endschema %}

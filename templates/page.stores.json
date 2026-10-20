@@ -1,0 +1,89 @@
+{
+  "sections": {
+    "intro": {
+      "type": "main-page",
+      "settings": {
+        "eyebrow": "",
+        "narrow": true,
+        "align": "center"
+      }
+    },
+    "stores": {
+      "type": "store-locations",
+      "blocks": {
+        "s1": {
+          "type": "store",
+          "settings": {
+            "name": "",
+            "city": "",
+            "address": "",
+            "hours": ""
+          }
+        },
+        "s2": {
+          "type": "store",
+          "settings": {
+            "name": "",
+            "city": "",
+            "address": "",
+            "hours": ""
+          }
+        },
+        "s3": {
+          "type": "store",
+          "settings": {
+            "name": "",
+            "city": "",
+            "address": "",
+            "hours": ""
+          }
+        },
+        "s4": {
+          "type": "store",
+          "settings": {
+            "name": "",
+            "city": "",
+            "address": "",
+            "hours": ""
+          }
+        },
+        "s5": {
+          "type": "store",
+          "settings": {
+            "name": "",
+            "city": "",
+            "address": "",
+            "hours": ""
+          }
+        },
+        "s6": {
+          "type": "store",
+          "settings": {
+            "name": "",
+            "city": "",
+            "address": "",
+            "hours": ""
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ],
+      "settings": {
+        "layout": "grid",
+        "eyebrow": "",
+        "title": "",
+        "text": ""
+      }
+    }
+  },
+  "order": [
+    "intro",
+    "stores"
+  ]
+}

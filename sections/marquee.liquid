@@ -1,0 +1,45 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_text = section.settings.text
+  if d_text == blank
+    assign _t = ns | append: '.text' | t
+    unless _t contains 'translation missing'
+      assign d_text = _t
+    endunless
+  endif
+-%}
+{%- if d_text != blank -%}
+  <section class="marquee" style="--marquee-speed: {{ section.settings.speed }}s">
+    {%- comment -%}
+      Read out once. The scrolling track below is the same phrase repeated for
+      visual effect, so it is hidden from assistive technology.
+    {%- endcomment -%}
+    <span class="visually-hidden">{{ d_text }}</span>
+    <div class="marquee__track" aria-hidden="true">
+      {%- for i in (1..2) -%}
+        <div class="marquee__run">
+          {%- for j in (1..6) -%}
+            <span class="marquee__item">{{ d_text }}</span>
+          {%- endfor -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Scrolling bar",
+  "class": "marquee-section",
+  "settings": [
+    { "type": "text", "id": "text", "label": "Phrase", "default": "" },
+    { "type": "range", "id": "speed", "label": "Seconds per loop", "min": 16, "max": 70, "step": 2, "default": 34, "unit": "s" }
+  ],
+  "presets": [{ "name": "Scrolling bar" }]
+}
+{% endschema %}

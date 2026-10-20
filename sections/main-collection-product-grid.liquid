@@ -1,0 +1,134 @@
+{%- paginate collection.products by section.settings.products_per_page -%}
+
+<section class="section section--tight" style="padding-top:0">
+  <div class="shell">
+
+    <div class="toolbar" data-toolbar>
+      <div class="toolbar__left">
+        {%- if section.settings.show_filters and collection.filters.size > 0 -%}
+          <button type="button" class="btn btn--outline btn--sm" data-facets-toggle aria-expanded="false" aria-controls="CollectionFacets">
+            {% render 'icon', icon: 'menu', size: 14 %} {{ 'collections.filters' | t }}
+          </button>
+        {%- endif -%}
+        <span class="toolbar__count small muted">{{ 'collections.showing' | t: count: paginate.items }}</span>
+      </div>
+
+      {%- if section.settings.show_sort -%}
+        {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+        <form class="toolbar__sort" data-sort-form>
+          <label for="SortBy" class="small muted">{{ 'collections.sort' | t }}</label>
+          <select name="sort_by" id="SortBy" class="select">
+            {%- for option in collection.sort_options -%}
+              <option value="{{ option.value }}" {% if option.value == sort_by %}selected{% endif %}>{{ option.name }}</option>
+            {%- endfor -%}
+          </select>
+        </form>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_filters and collection.filters.size > 0 -%}
+      <form id="CollectionFacets" class="facets" data-facets hidden>
+        {%- if collection.sort_by != blank -%}
+          <input type="hidden" name="sort_by" value="{{ collection.sort_by }}">
+        {%- endif -%}
+
+        {%- for filter in collection.filters -%}
+          <div class="facet">
+            <span class="facet__title">{{ filter.label }}</span>
+
+            {%- case filter.type -%}
+              {%- when 'price_range' -%}
+                <div class="facet__range">
+                  <input class="input" type="number" inputmode="numeric" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}" placeholder="{{ 'collections.min' | t }}">
+                  <span>-</span>
+                  <input class="input" type="number" inputmode="numeric" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}" placeholder="{{ 'collections.max' | t }}">
+                </div>
+              {%- else -%}
+                <ul class="facet__values">
+                  {%- for value in filter.values -%}
+                    <li>
+                      <label class="check">
+                        <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                        <span>{{ value.label }} <em class="muted">({{ value.count }})</em></span>
+                      </label>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+
+        <div class="facet facet--actions">
+          <button type="submit" class="btn btn--dark btn--sm">{{ 'collections.apply' | t }}</button>
+          <a href="{{ collection.url }}" class="btn btn--ghost btn--sm">{{ 'collections.clear' | t }}</a>
+        </div>
+      </form>
+    {%- endif -%}
+
+    {%- if collection.products.size > 0 -%}
+      <div class="product-grid product-grid--{{ section.settings.columns }}" id="ProductGrid">
+        {%- for product in collection.products -%}
+          {% render 'product-card', product: product, index: forloop.index %}
+        {%- endfor -%}
+      </div>
+
+      {% render 'pagination', paginate: paginate %}
+    {%- else -%}
+      <div class="empty-state">
+        {%- comment -%}
+          Nothing here means one of two different things. A family that has
+          never been stocked is "coming soon"; a family hidden behind a filter
+          is a filter problem. Saying the right one is the whole point.
+        {%- endcomment -%}
+        {%- if collection.all_products_count == 0 -%}
+          {% render 'icon', icon: 'sparkle', size: 28 %}
+          <p class="display-3">{{ 'collections.soon_title' | t }}</p>
+          <p class="muted">{{ 'collections.soon_text' | t }}</p>
+          {%- assign wa = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' -%}
+          {%- if wa != blank -%}
+            {%- assign wa_msg = 'collections.soon_message' | t: family: collection.title -%}
+            <a href="https://wa.me/{{ wa }}?text={{ wa_msg | url_encode }}"
+               class="btn btn--wa" style="margin-top:22px"
+               target="_blank" rel="noopener noreferrer nofollow">
+              {% render 'icon', icon: 'whatsapp', size: 17 %}
+              {{ 'collections.soon_cta' | t }}
+            </a>
+          {%- endif -%}
+        {%- else -%}
+          <p class="display-3">{{ 'collections.empty_title' | t }}</p>
+          <p class="muted">{{ 'collections.empty_text' | t }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="btn btn--dark" style="margin-top:22px">{{ 'collections.all' | t }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.seo_text != blank -%}
+      <div class="seo-text rte">{{ section.settings.seo_text }}</div>
+    {%- endif -%}
+  </div>
+</section>
+
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Product grid",
+  "class": "collection-grid-section",
+  "settings": [
+    { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "options": [
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "4"
+    },
+    { "type": "checkbox", "id": "show_filters", "label": "Show filters", "default": true, "info": "Filters come from the Search & Discovery app." },
+    { "type": "checkbox", "id": "show_sort", "label": "Show sorting", "default": true },
+    { "type": "richtext", "id": "seo_text", "label": "SEO text under the grid" }
+  ]
+}
+{% endschema %}

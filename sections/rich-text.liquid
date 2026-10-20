@@ -1,0 +1,91 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_eyebrow = section.settings.eyebrow
+  if d_eyebrow == blank
+    assign _t = ns | append: '.eyebrow' | t
+    unless _t contains 'translation missing'
+      assign d_eyebrow = _t
+    endunless
+  endif
+  assign d_text = section.settings.text
+  if d_text == blank
+    assign _t = ns | append: '.text' | t
+    unless _t contains 'translation missing'
+      assign d_text = _t
+    endunless
+  endif
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+-%}
+<section class="section{% if section.settings.compact %} section--tight{% endif %}" {% if section.settings.background == 'bone' %}style="background: var(--c-bone)"{% elsif section.settings.background == 'ink' %}style="background: var(--c-ink); color: var(--c-ivory)"{% endif %}>
+  <div class="shell">
+    <div class="shell--narrow" style="padding-inline:0; margin-inline:auto; text-align: {{ section.settings.alignment }}">
+      {%- if d_eyebrow != blank -%}<p class="eyebrow">{{ d_eyebrow }}</p>{%- endif -%}
+      {%- if d_title != blank -%}
+        <h2 class="display-3" style="margin-top:12px{% if section.settings.background == 'ink' %}; color:#fff{% endif %}">{{ d_title }}</h2>
+      {%- endif -%}
+      {%- if d_text != blank -%}
+        <div class="rte" style="margin-top:18px{% if section.settings.background == 'ink' %}; color: rgba(250,247,243,.75){% endif %}">{{ d_text }}</div>
+      {%- endif -%}
+      {%- if section.settings.cta_label != blank -%}
+        <a href="{{ section.settings.cta_url }}" class="btn {% if section.settings.background == 'ink' %}btn--gold{% else %}btn--outline{% endif %}" style="margin-top:26px">{{ section.settings.cta_label }}</a>
+      {%- endif -%}
+
+      {%- comment -%}
+        Theme blocks from blocks/. Nothing renders unless the merchant adds
+        one, so this is invisible on an untouched section.
+      {%- endcomment -%}
+      {%- for block in section.blocks -%}
+        {%- render block -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Rich text",
+  "class": "rich-text-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "title", "label": "Heading" },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "" },
+    { "type": "text", "id": "cta_label", "label": "Button" },
+    { "type": "url", "id": "cta_url", "label": "Button link" },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Centre" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "white", "label": "White" },
+        { "value": "bone", "label": "Bone" },
+        { "value": "ink", "label": "Ink (dark)" }
+      ],
+      "default": "white"
+    },
+    { "type": "checkbox", "id": "compact", "label": "Reduce vertical spacing", "default": false }
+  ],
+  "blocks": [{ "type": "@theme" }],
+  "presets": [{ "name": "Rich text" }]
+}
+{% endschema %}

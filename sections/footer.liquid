@@ -1,0 +1,156 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign ns = 'defaults.chrome_' | append: section.id
+  assign d_payment_labels = section.settings.payment_labels
+  if d_payment_labels == blank
+    assign _t = ns | append: '.payment_labels' | t
+    unless _t contains 'translation missing'
+      assign d_payment_labels = _t
+    endunless
+  endif
+-%}
+<footer class="footer">
+  <div class="shell">
+    <div class="footer__cols">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign bns = ns | append: '.' | append: forloop.index
+          assign db_heading = block.settings.heading
+          if db_heading == blank
+            assign _t = bns | append: '_heading' | t
+            unless _t contains 'translation missing'
+              assign db_heading = _t
+            endunless
+          endif
+          assign db_text = block.settings.text
+          if db_text == blank
+            assign _t = bns | append: '_text' | t
+            unless _t contains 'translation missing'
+              assign db_text = _t
+            endunless
+          endif
+        -%}
+        {%- case block.type -%}
+
+          {%- when 'about' -%}
+            <div class="footer__about" {{ block.shopify_attributes }}>
+              <span class="logo__name" style="color:#fff; font-size:1.6rem">{{ shop.name }}</span>
+              {%- if db_text != blank -%}
+                <p style="margin-top:16px">{{ db_text }}</p>
+              {%- endif -%}
+
+              <div class="footer__contact">
+                {%- if settings.whatsapp_number != blank -%}
+                  {%- assign number = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' -%}
+                  <div><a href="https://wa.me/{{ number }}" target="_blank" rel="noopener nofollow">{{ settings.whatsapp_number }}</a></div>
+                {%- endif -%}
+                {%- if settings.shop_email != blank -%}
+                  <div><a href="mailto:{{ settings.shop_email }}">{{ settings.shop_email }}</a></div>
+                {%- endif -%}
+                {%- if settings.shop_street != blank -%}
+                  <div>{{ settings.shop_street }}, {{ settings.shop_city }}</div>
+                {%- endif -%}
+              </div>
+
+              <div class="footer__social">
+                {%- if settings.social_instagram != blank -%}<a href="{{ settings.social_instagram }}" target="_blank" rel="noopener" aria-label="Instagram">{% render 'icon', icon: 'instagram', size: 17 %}</a>{%- endif -%}
+                {%- if settings.social_facebook != blank -%}<a href="{{ settings.social_facebook }}" target="_blank" rel="noopener" aria-label="Facebook">{% render 'icon', icon: 'facebook', size: 17 %}</a>{%- endif -%}
+                {%- if settings.social_tiktok != blank -%}<a href="{{ settings.social_tiktok }}" target="_blank" rel="noopener" aria-label="TikTok">{% render 'icon', icon: 'tiktok', size: 17 %}</a>{%- endif -%}
+                {%- if settings.social_pinterest != blank -%}<a href="{{ settings.social_pinterest }}" target="_blank" rel="noopener" aria-label="Pinterest">{% render 'icon', icon: 'pinterest', size: 17 %}</a>{%- endif -%}
+                {%- if settings.social_youtube != blank -%}<a href="{{ settings.social_youtube }}" target="_blank" rel="noopener" aria-label="YouTube">{% render 'icon', icon: 'youtube', size: 17 %}</a>{%- endif -%}
+              </div>
+            </div>
+
+          {%- when 'menu' -%}
+            <div {{ block.shopify_attributes }}>
+              <h3>{{ db_heading }}</h3>
+              <ul>
+                {%- for link in block.settings.menu.links -%}
+                  <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </div>
+
+          {%- when 'text' -%}
+            <div {{ block.shopify_attributes }}>
+              <h3>{{ db_heading }}</h3>
+              <div class="rte" style="font-size:13px; color:inherit">{{ db_text }}</div>
+            </div>
+
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+
+    <div class="footer__bottom">
+      <a href="{{ routes.root_url }}" class="logo"><span class="logo__name">{{ shop.name }}</span></a>
+
+      {%- if d_payment_labels != blank -%}
+        <div class="footer__payments">
+          {%- assign labels = d_payment_labels | split: ',' -%}
+          {%- for label in labels -%}
+            <span>{{ label | strip }}</span>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <div class="footer__legal">
+        <span>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}</span>
+        {%- if section.settings.legal_menu != blank -%}
+          {%- for link in section.settings.legal_menu.links -%}
+            <a href="{{ link.url }}">{{ link.title }}</a>
+          {%- endfor -%}
+        {%- endif -%}
+        <span>{{ 'general.morocco_only' | t }}</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "class": "footer-section",
+  "settings": [
+    { "type": "link_list", "id": "legal_menu", "label": "Legal links" },
+    { "type": "text", "id": "payment_labels", "label": "Payment / reassurance labels", "info": "Comma separated.", "default": "" }
+  ],
+  "blocks": [
+    {
+      "type": "about",
+      "name": "Brand column",
+      "limit": 1,
+      "settings": [
+        { "type": "textarea", "id": "text", "label": "Text", "default": "" }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "Menu column",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "" },
+        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text column",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        { "type": "about" },
+        { "type": "menu" },
+        { "type": "menu" },
+        { "type": "menu" },
+        { "type": "text" }
+      ]
+    }
+  ]
+}
+{% endschema %}

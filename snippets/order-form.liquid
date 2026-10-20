@@ -1,0 +1,143 @@
+{%- comment -%}
+  Cash-on-delivery order form for a single product.
+
+  The shopper fills four required fields and presses one button. The order is
+  written straight into the shop's Google Sheet by an Apps Script web app, and
+  the shopper gets a reference number plus a phone number to call. Nothing
+  opens WhatsApp: the sheet is the shop's inbox.
+
+  The endpoint lives in theme settings because a theme has no server of its
+  own. That makes the URL visible in the page source, so the Apps Script must
+  only ever append rows — never read them back, and never return data.
+
+  Usage: {% render 'order-form', product: product, variant: current_variant %}
+{%- endcomment -%}
+{%- liquid
+  assign endpoint = settings.order_endpoint
+  assign v = variant | default: product.selected_or_first_available_variant
+  assign unit = v.price | default: product.price
+-%}
+{%- if endpoint != blank -%}
+  <form
+    class="order-form"
+    data-order-form
+    data-endpoint="{{ endpoint }}"
+    data-secret="{{ settings.order_secret | escape }}"
+    data-shop="{{ shop.name | escape }}"
+    data-product="{{ product.title | escape }}"
+    data-sku="{{ v.sku | default: product.handle | escape }}"
+    data-unit="{{ unit }}"
+    data-currency="{{ cart.currency.iso_code | default: shop.currency }}"
+    data-free="{{ 'order.free' | t | escape }}"
+    data-err-phone="{{ 'order.err_phone' | t | escape }}"
+    data-err-send="{{ 'order.err_send' | t | escape }}"
+    novalidate>
+
+    <div class="order-form__head">
+      <h2 class="order-form__title">{{ 'order.heading' | t }}</h2>
+      <p class="order-form__intro">{{ 'order.intro' | t }}</p>
+    </div>
+
+    {%- comment -%} Honeypot: a person never sees it, a bot fills it. {%- endcomment -%}
+    <input type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" class="order-form__hp">
+
+    <div class="order-form__grid">
+      <p class="field-row">
+        <label class="label" for="of-name">{{ 'order.name' | t }} *</label>
+        <input class="input" id="of-name" name="name" required minlength="2" maxlength="80"
+               autocomplete="name" placeholder="{{ 'order.name_ph' | t | escape }}">
+      </p>
+
+      <p class="field-row">
+        <label class="label" for="of-phone">{{ 'order.phone' | t }} *</label>
+        <input class="input" id="of-phone" name="phone" type="tel" inputmode="tel" required
+               maxlength="20" autocomplete="tel" dir="ltr" placeholder="06 12 34 56 78">
+      </p>
+
+      <p class="field-row">
+        <label class="label" for="of-city">{{ 'order.city' | t }} *</label>
+        <select class="input" id="of-city" name="city" required>
+          <option value="" disabled selected>{{ 'order.select_city' | t }}</option>
+          {%- assign cities = 'order.cities' | t | split: ',' -%}
+          {%- for pair in cities -%}
+            {%- assign bits = pair | split: '|' -%}
+            <option value="{{ bits[0] | escape }}">{{ bits[1] | default: bits[0] }}</option>
+          {%- endfor -%}
+        </select>
+      </p>
+
+      <p class="field-row">
+        <label class="label" for="of-address">{{ 'order.address' | t }} *</label>
+        <input class="input" id="of-address" name="address" required minlength="5" maxlength="220"
+               autocomplete="street-address" placeholder="{{ 'order.address_ph' | t | escape }}">
+      </p>
+    </div>
+
+    <p class="order-form__hint">{{ 'order.required_note' | t }}</p>
+    <p class="order-form__error" data-order-error hidden></p>
+    {%- comment -%}
+      An error with no way out loses the sale. WhatsApp reaches a human, who
+      records the order in the same sheet this form writes to — it is never
+      the channel the order is placed through.
+    {%- endcomment -%}
+    {%- if settings.whatsapp_number != blank -%}
+      {%- assign wa_fallback = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' -%}
+      <a class="order-form__error-wa"
+         data-order-err-wa hidden
+         href="https://wa.me/{{ wa_fallback }}?text={{ 'order.err_wa_msg' | t: product: product.title | url_encode }}"
+         target="_blank" rel="noopener nofollow">
+        {% render 'icon', icon: 'whatsapp', size: 14 %}
+        {{ 'order.err_wa' | t }}
+      </a>
+    {%- endif -%}
+
+    <p class="order-form__total">
+      <span>{{ 'order.pay_on_delivery' | t }}</span>
+      <strong data-order-total>{{ unit | money }}</strong>
+    </p>
+
+    <button type="submit" class="btn btn--dark btn--lg" data-order-submit
+      {% unless v.available %}disabled{% endunless %}>
+      {% render 'icon', icon: 'check', size: 17 %}
+      <span data-order-label>{% if v.available %}{{ 'order.submit' | t }}{% else %}{{ 'products.sold_out' | t }}{% endif %}</span>
+    </button>
+
+    <p class="btn-note">
+      {% render 'icon', icon: 'shield', size: 15 %}
+      <span>{{ 'order.secure' | t }}</span>
+    </p>
+  </form>
+
+  {%- comment -%} Shown in place of the form once the row has been written. {%- endcomment -%}
+  <div class="order-done" data-order-done hidden>
+    <div class="order-done__tick">{% render 'icon', icon: 'check', size: 22 %}</div>
+    <p class="order-done__title">{{ 'order.done' | t }}</p>
+    <p class="order-done__label">{{ 'order.your_code' | t }}</p>
+    <p class="order-done__code" dir="ltr" data-order-ref></p>
+    <p class="order-done__text">{{ 'order.next' | t }}</p>
+    {%- if settings.shop_phone != blank -%}
+      {%- assign tel = settings.shop_phone | remove: ' ' | remove: '-' -%}
+      <p class="order-done__contact">
+        {{ 'order.contact' | t }}
+        <a href="tel:{{ tel }}" dir="ltr">{{ settings.shop_phone }}</a>
+      </p>
+    {%- endif -%}
+    {%- comment -%}
+      A reference is only useful if reaching a human with it takes one tap, so
+      the message is prefilled. The code itself is only known once the order
+      has been written, so theme.js substitutes it into __REF__.
+    {%- endcomment -%}
+    {%- if settings.whatsapp_number != blank -%}
+      {%- assign wa_number = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' -%}
+      <a class="btn btn--wa btn--full order-done__wa"
+         data-order-wa
+         data-wa-base="https://wa.me/{{ wa_number }}"
+         data-wa-msg="{{ 'order.track_msg' | t: ref: '__REF__' | escape }}"
+         href="https://wa.me/{{ wa_number }}"
+         target="_blank" rel="noopener nofollow">
+        {% render 'icon', icon: 'whatsapp', size: 16 %}
+        {{ 'order.track_wa' | t }}
+      </a>
+    {%- endif -%}
+  </div>
+{%- endif -%}

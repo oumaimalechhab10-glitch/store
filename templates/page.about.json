@@ -1,0 +1,61 @@
+{
+  "sections": {
+    "intro": {
+      "type": "main-page",
+      "settings": {
+        "eyebrow": "",
+        "narrow": true,
+        "align": "center"
+      }
+    },
+    "split": {
+      "type": "image-with-text",
+      "blocks": {
+        "s1": {
+          "type": "stat",
+          "settings": {
+            "value": "2019",
+            "label": ""
+          }
+        },
+        "s2": {
+          "type": "stat",
+          "settings": {
+            "value": "6",
+            "label": ""
+          }
+        },
+        "s3": {
+          "type": "stat",
+          "settings": {
+            "value": "40k",
+            "label": ""
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "media_position": "right",
+        "eyebrow": "",
+        "title": "",
+        "text": ""
+      }
+    },
+    "quote": {
+      "type": "quote",
+      "settings": {
+        "quote": "",
+        "author": ""
+      }
+    }
+  },
+  "order": [
+    "intro",
+    "split",
+    "quote"
+  ]
+}

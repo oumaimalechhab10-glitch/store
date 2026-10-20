@@ -1,0 +1,45 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "shipping": {
+          "type": "accordion",
+          "settings": {
+            "title": "",
+            "content": ""
+          }
+        }
+      },
+      "block_order": [
+        "shipping"
+      ],
+      "settings": {
+        "show_vendor": true,
+        "show_reassurance": true
+      }
+    },
+    "related": {
+      "type": "related-products",
+      "settings": {
+        "title": "",
+        "products_to_show": 4,
+        "align": "center",
+        "background": "bone"
+      }
+    },
+    "reviews": {
+      "type": "product-reviews",
+      "settings": {
+        "title": "",
+        "show_summary": true,
+        "background": "sand"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "reviews",
+    "related"
+  ]
+}

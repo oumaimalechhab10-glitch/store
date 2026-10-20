@@ -1,0 +1,89 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+-%}
+{%- if section.blocks.size > 0 -%}
+  <section class="section gallery-section">
+    <div class="shell">
+      {%- if d_title != blank -%}
+        <div class="section-head center">
+          <h2 class="section-title">{{ d_title }}</h2>
+        </div>
+      {%- endif -%}
+
+      <div class="gallery">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign bns = ns | append: '.' | append: forloop.index
+            assign db_alt = block.settings.alt
+            if db_alt == blank
+              assign _t = bns | append: '_alt' | t
+              unless _t contains 'translation missing'
+                assign db_alt = _t
+              endunless
+            endif
+            assign href = block.settings.link
+            if href == blank
+              assign href = section.settings.link
+            endif
+          -%}
+          {%- capture media -%}
+            {%- if block.settings.image -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 800 }}"
+                srcset="{{ block.settings.image | image_url: width: 400 }} 400w, {{ block.settings.image | image_url: width: 800 }} 800w"
+                sizes="(max-width: 767px) 50vw, 25vw"
+                alt="{{ block.settings.image.alt | default: db_alt | escape }}"
+                loading="lazy"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}">
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag }}
+            {%- endif -%}
+          {%- endcapture -%}
+
+          {%- if href != blank -%}
+            <a class="gallery__cell reveal" href="{{ href }}" {{ block.shopify_attributes }}>{{ media }}</a>
+          {%- else -%}
+            <div class="gallery__cell reveal" {{ block.shopify_attributes }}>{{ media }}</div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Photo grid",
+  "class": "gallery-wrap",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "title", "label": "Heading", "default": "" },
+    { "type": "url", "id": "link", "label": "Default link for every photo" }
+  ],
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "Photo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "alt", "label": "Alt text", "default": "" },
+        { "type": "url", "id": "link", "label": "Link", "info": "Falls back to the section link." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Photo grid", "blocks": [{ "type": "photo" }, { "type": "photo" }, { "type": "photo" }, { "type": "photo" }] }]
+}
+{% endschema %}

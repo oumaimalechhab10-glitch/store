@@ -1,0 +1,376 @@
+<!doctype html>
+{%- liquid
+  # Direction follows the active Shopify language; the theme setting can force it.
+  assign iso = request.locale.iso_code | default: 'fr'
+  assign rtl_locales = 'ar,he,fa,ur'
+  assign dir = 'ltr'
+  if rtl_locales contains iso
+    assign dir = 'rtl'
+  endif
+  if settings.text_direction == 'rtl' or settings.text_direction == 'ltr'
+    assign dir = settings.text_direction
+  endif
+-%}
+<!-- EmmaLux -->
+<html lang="{{ iso }}" dir="{{ dir }}"{% unless settings.color_scheme_default == 'auto' %} data-theme="{{ settings.color_scheme_default | default: 'light' }}"{% endunless %}>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_ink }}" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0f0c0a" media="(prefers-color-scheme: dark)">
+
+    {%- comment -%}
+      Runs before first paint so the page never flashes the wrong scheme.
+      Order of truth: explicit choice in localStorage > OS preference > theme default.
+    {%- endcomment -%}
+    <script>
+      (function () {
+        var fallback = {{ settings.color_scheme_default | default: 'light' | json }};
+        var saved = null;
+        try { saved = localStorage.getItem('emmalux:scheme'); } catch (e) {}
+        var scheme = saved;
+        if (!scheme) {
+          if (fallback === 'auto') {
+            scheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          } else {
+            scheme = fallback;
+          }
+        }
+        document.documentElement.setAttribute('data-theme', scheme);
+      })();
+    </script>
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 48 }}">
+      <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180 }}">
+    {%- endif -%}
+
+    <title>
+      {{- page_title -}}
+      {%- if current_tags %} &ndash; {{ 'general.meta.tags' | t: tags: current_tags | join: ', ' }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {% render 'meta-tags' %}
+
+    {%- comment -%} Self-hosted type: no third-party request, instant render. {%- endcomment -%}
+    {{ 'cormorant-400.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: '' }}
+    {{ 'jost-var.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: '' }}
+
+    <style>
+      @font-face {
+        font-family: 'Cormorant Garamond';
+        font-style: normal; font-weight: 400; font-display: swap;
+        src: url({{ 'cormorant-400.woff2' | asset_url }}) format('woff2');
+      }
+      @font-face {
+        font-family: 'Cormorant Garamond';
+        font-style: normal; font-weight: 500; font-display: swap;
+        src: url({{ 'cormorant-500.woff2' | asset_url }}) format('woff2');
+      }
+      @font-face {
+        font-family: 'Cormorant Garamond';
+        font-style: normal; font-weight: 600; font-display: swap;
+        src: url({{ 'cormorant-600.woff2' | asset_url }}) format('woff2');
+      }
+      @font-face {
+        font-family: 'Jost'; font-style: normal; font-weight: 100 900; font-display: swap;
+        src: url({{ 'jost-var.woff2' | asset_url }}) format('woff2');
+      }
+
+      /* Arabic faces. Cormorant and Jost carry no Arabic glyphs, so Amiri
+         (display) and Cairo (UI) take over whenever the page is in Arabic. */
+      @font-face {
+        font-family: 'Amiri'; font-style: normal; font-weight: 400; font-display: swap;
+        unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+        src: url({{ 'amiri-ar-400.woff2' | asset_url }}) format('woff2');
+      }
+      @font-face {
+        font-family: 'Amiri'; font-style: normal; font-weight: 700; font-display: swap;
+        unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+        src: url({{ 'amiri-ar-700.woff2' | asset_url }}) format('woff2');
+      }
+      @font-face {
+        font-family: 'Cairo'; font-style: normal; font-weight: 400; font-display: swap;
+        unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+        src: url({{ 'cairo-ar-400.woff2' | asset_url }}) format('woff2');
+      }
+      @font-face {
+        font-family: 'Cairo'; font-style: normal; font-weight: 500; font-display: swap;
+        unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+        src: url({{ 'cairo-ar-500.woff2' | asset_url }}) format('woff2');
+      }
+      @font-face {
+        font-family: 'Cairo'; font-style: normal; font-weight: 600; font-display: swap;
+        unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF;
+        src: url({{ 'cairo-ar-600.woff2' | asset_url }}) format('woff2');
+      }
+
+      :root {
+        /* ---- brand constants: identical in both colour schemes ---------- */
+        --c-gold: {{ settings.color_gold }};
+        --c-goldsoft: {{ settings.color_gold_soft }};
+        --c-wine: {{ settings.color_wine }};
+        --c-wa: #1faa54;
+        --c-wa-dark: #178a44;
+        --scrim-rgb: 14, 11, 9;          /* image overlays stay dark in both schemes */
+
+        /* ---- typography ------------------------------------------------- */
+        --f-display: 'Cormorant Garamond', 'Amiri', Georgia, 'Times New Roman', serif;
+        --f-body: 'Jost', 'Cairo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --ls-luxe: .16em;
+        --ls-wider: .24em;
+
+        /* Fluid type scale — one source of truth from 360px to 1600px. */
+        --step--2: clamp(0.70rem, 0.68rem + 0.10vw, 0.76rem);
+        --step--1: clamp(0.81rem, 0.78rem + 0.14vw, 0.89rem);
+        --step-0:  clamp(0.95rem, 0.92rem + 0.16vw, 1.03rem);
+        --step-1:  clamp(1.08rem, 1.02rem + 0.30vw, 1.27rem);
+        --step-2:  clamp(1.30rem, 1.17rem + 0.62vw, 1.72rem);
+        --step-3:  clamp(1.60rem, 1.33rem + 1.30vw, 2.45rem);
+        --step-4:  clamp(1.95rem, 1.45rem + 2.40vw, 3.45rem);
+        --step-5:  clamp(2.35rem, 1.45rem + 4.20vw, 4.80rem);
+
+        /* ---- spacing & layout rhythm ------------------------------------ */
+        --space-2xs: clamp(0.38rem, 0.35rem + 0.12vw, 0.45rem);
+        --space-xs:  clamp(0.60rem, 0.55rem + 0.25vw, 0.80rem);
+        --space-s:   clamp(0.95rem, 0.88rem + 0.35vw, 1.25rem);
+        --space-m:   clamp(1.45rem, 1.30rem + 0.70vw, 2.10rem);
+        --space-l:   clamp(2.20rem, 1.85rem + 1.70vw, 3.60rem);
+        --space-xl:  clamp(3.20rem, 2.40rem + 3.60vw, 6.20rem);
+        --gutter: clamp(16px, 1.2vw + 12px, 34px);
+        --shell-max: {{ settings.page_width | default: 1560 }}px;
+        --header-h: 100px;
+        --radius: {{ settings.corner_radius | default: 0 }}px;
+        --tap: 48px;                      /* minimum comfortable touch target */
+
+        /* ---- motion ----------------------------------------------------- */
+        --ease: cubic-bezier(.22, .61, .36, 1);
+        --dur-1: .22s;
+        --dur-2: .42s;
+        --dur-3: .70s;
+
+        --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2317120f' fill='none' stroke-width='1.2'/%3E%3C/svg%3E");
+      }
+
+      /* ---------------------- light scheme (default) --------------------- */
+      :root,
+      [data-theme='light'] {
+        color-scheme: light;
+
+        --ink-rgb: 23, 18, 15;            /* every hairline / tint derives from these */
+        --cocoa-rgb: 75, 63, 56;
+        --paper-rgb: 255, 255, 255;
+
+        --c-ink: {{ settings.color_ink }};
+        --c-espresso: {{ settings.color_espresso }};
+        --c-cocoa: {{ settings.color_cocoa }};
+        --c-ivory: {{ settings.color_ivory }};
+        --c-bone: {{ settings.color_bone }};
+
+        --bg: #ffffff;
+        --bg-alt: {{ settings.color_bone }};
+        --bg-sunken: {{ settings.color_ivory }};
+        --surface: #ffffff;
+        --surface-raised: #ffffff;
+
+        --text: {{ settings.color_ink }};
+        --text-soft: {{ settings.color_cocoa }};
+        --text-mute: #6a5c53;             /* 4.6:1 on white — readable, still quiet */
+        --text-on-accent: #ffffff;
+
+        --line: rgba(23, 18, 15, .14);
+        --line-soft: rgba(23, 18, 15, .08);
+        --line-strong: rgba(23, 18, 15, .26);
+
+        --accent: {{ settings.color_gold }};
+        --accent-text: #8a6b3b;           /* gold dark enough to read as text */
+        --sale: {{ settings.color_wine | default: '#7a2e3a' }};
+        --accent-contrast: #ffffff;
+
+        --btn-primary-bg: {{ settings.color_ink }};
+        --btn-primary-text: #ffffff;
+        --btn-primary-bg-hover: #2c231d;
+
+        --band-bg: {{ settings.color_ink }};
+        --band-bg-soft: #241c17;
+        --band-text: {{ settings.color_ivory }};
+        --band-text-soft: rgba(250, 247, 243, .72);
+
+        --shadow-s: 0 2px 8px -4px rgba(23,18,15,.22);
+        --shadow-m: 0 12px 30px -16px rgba(23,18,15,.28);
+        --shadow-pop: 0 24px 60px -24px rgba(23,18,15,.35);
+      }
+
+      /* ------------------------- dark scheme ----------------------------- */
+      [data-theme='dark'] {
+        color-scheme: dark;
+
+        --ink-rgb: 243, 238, 231;
+        --cocoa-rgb: 214, 203, 191;
+        --paper-rgb: 18, 15, 13;
+
+        --c-ink: #f6f2ec;
+        --c-espresso: #e6ded3;
+        --c-cocoa: #cdc2b5;
+        --c-ivory: #16120f;
+        --c-bone: #1c1714;
+
+        --bg: #121010;
+        --bg-alt: #1a1613;
+        --bg-sunken: #0d0b0a;
+        --surface: #1a1614;
+        --surface-raised: #221c18;
+
+        --text: #f6f2ec;
+        --text-soft: #d3c8bb;
+        --text-mute: #a99b8d;             /* 5.2:1 on #121010 */
+        --text-on-accent: #17120f;
+
+        --line: rgba(243, 238, 231, .16);
+        --line-soft: rgba(243, 238, 231, .09);
+        --line-strong: rgba(243, 238, 231, .30);
+
+        --accent: {{ settings.color_gold_soft | default: '#d7bd92' }};
+        --accent-text: {{ settings.color_gold_soft | default: '#d7bd92' }};
+        --sale: #e4909c;
+        --accent-contrast: #17120f;
+
+        --btn-primary-bg: {{ settings.color_gold_soft | default: '#d7bd92' }};
+        --btn-primary-text: #17120f;
+        --btn-primary-bg-hover: #e8d3ad;
+
+        --band-bg: #090707;
+        --band-bg-soft: #141010;
+        --band-text: #f6f2ec;
+        --band-text-soft: rgba(246, 242, 236, .70);
+
+        --shadow-s: 0 2px 10px -4px rgba(0,0,0,.6);
+        --shadow-m: 0 14px 34px -18px rgba(0,0,0,.75);
+        --shadow-pop: 0 26px 64px -26px rgba(0,0,0,.85);
+
+        --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23f3eee7' fill='none' stroke-width='1.2'/%3E%3C/svg%3E");
+      }
+
+      /* Same palette for visitors who never touched the switch but whose
+         system is in dark mode. */
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme]) {
+          color-scheme: dark;
+
+          --ink-rgb: 243, 238, 231;
+          --cocoa-rgb: 214, 203, 191;
+          --paper-rgb: 18, 15, 13;
+
+          --c-ink: #f6f2ec;
+          --c-espresso: #e6ded3;
+          --c-cocoa: #cdc2b5;
+          --c-ivory: #16120f;
+          --c-bone: #1c1714;
+
+          --bg: #121010;
+          --bg-alt: #1a1613;
+          --bg-sunken: #0d0b0a;
+          --surface: #1a1614;
+          --surface-raised: #221c18;
+
+          --text: #f6f2ec;
+          --text-soft: #d3c8bb;
+          --text-mute: #a99b8d;             /* 5.2:1 on #121010 */
+          --text-on-accent: #17120f;
+
+          --line: rgba(243, 238, 231, .16);
+          --line-soft: rgba(243, 238, 231, .09);
+          --line-strong: rgba(243, 238, 231, .30);
+
+          --accent: {{ settings.color_gold_soft | default: '#d7bd92' }};
+          --accent-text: {{ settings.color_gold_soft | default: '#d7bd92' }};
+          --sale: #e4909c;
+          --accent-contrast: #17120f;
+
+          --btn-primary-bg: {{ settings.color_gold_soft | default: '#d7bd92' }};
+          --btn-primary-text: #17120f;
+          --btn-primary-bg-hover: #e8d3ad;
+
+          --band-bg: #090707;
+          --band-bg-soft: #141010;
+          --band-text: #f6f2ec;
+          --band-text-soft: rgba(246, 242, 236, .70);
+
+          --shadow-s: 0 2px 10px -4px rgba(0,0,0,.6);
+          --shadow-m: 0 14px 34px -18px rgba(0,0,0,.75);
+          --shadow-pop: 0 26px 64px -26px rgba(0,0,0,.85);
+
+          --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23f3eee7' fill='none' stroke-width='1.2'/%3E%3C/svg%3E");
+        }
+      }
+
+      /* Arabic sets its own faces and a slightly larger body size: Arabic
+         glyphs read smaller than Latin at the same point size. */
+      [lang='ar'] {
+        --f-display: 'Amiri', 'Cormorant Garamond', Georgia, serif;
+        --f-body: 'Cairo', 'Jost', system-ui, sans-serif;
+        --ls-luxe: 0;
+        --ls-wider: 0;
+        --step-0: clamp(1.00rem, 0.96rem + 0.18vw, 1.09rem);
+      }
+    </style>
+
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+
+    <script>
+      window.EmmaLux = {
+        routes: {
+          cart: '{{ routes.cart_url }}',
+          checkout: '{{ routes.root_url | append: "/checkout" | replace: "//", "/" }}',
+          cartAdd: '{{ routes.cart_add_url }}',
+          cartChange: '{{ routes.cart_change_url }}',
+          cartUpdate: '{{ routes.cart_update_url }}',
+          predictive: '{{ routes.predictive_search_url }}',
+          search: '{{ routes.search_url }}'
+        },
+        money: {{ shop.money_format | json }},
+        whatsapp: {{ settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' | json }},
+        freeShippingThreshold: {{ settings.free_shipping_threshold | default: 0 | times: 100 }},
+        strings: {
+          added: {{ 'cart.added' | t | json }},
+          soldOut: {{ 'products.sold_out' | t | json }},
+          unavailable: {{ 'products.unavailable' | t | json }},
+          addToCart: {{ 'products.add_to_cart' | t | json }},
+          ordering: {{ 'order.ordering' | t | json }}
+        }
+      };
+    </script>
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+
+    {{ content_for_header }}
+  </head>
+
+  <body class="template-{{ template.name | handle }}{% if template.suffix %} template-{{ template.name | handle }}-{{ template.suffix | handle }}{% endif %}">
+    <a class="skip-link" href="#MainContent">{{ 'accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <main id="MainContent" role="main">
+      {{ content_for_layout }}
+    </main>
+
+    {% sections 'footer-group' %}
+
+    {% section 'cart-drawer' %}
+    {% render 'whatsapp-fab' %}
+
+    <div class="overlay" data-overlay hidden></div>
+
+    {% render 'structured-data' %}
+    {% render 'analytics' %}
+  </body>
+</html>

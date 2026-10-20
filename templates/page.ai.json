@@ -1,0 +1,6 @@
+{
+  "sections": {
+    "main": { "type": "ai-brief", "settings": {} }
+  },
+  "order": ["main"]
+}

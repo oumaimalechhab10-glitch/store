@@ -1,0 +1,125 @@
+{%- comment -%}
+  Product card.
+  The whole tile is one link — there is no quick-add button. Instead, resting
+  the pointer on a card scrolls through that product's photos, which is how
+  people actually decide on jewellery. On touch screens the same track becomes
+  a swipeable carousel, so phones get the behaviour without needing hover.
+
+  Usage: {% render 'product-card', product: product, index: forloop.index, show_swatches: true %}
+{%- endcomment -%}
+{%- liquid
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+    assign saved = product.compare_at_price | minus: product.price | times: 100.0 | divided_by: product.compare_at_price | round
+  endif
+
+  assign is_new = false
+  assign age = 'now' | date: '%s' | minus: product.published_at | date: '%s'
+  if age < 2592000
+    assign is_new = true
+  endif
+
+  assign loading = 'lazy'
+  assign priority = 'auto'
+  if index and index <= 4
+    assign loading = 'eager'
+  endif
+  if index and index <= 2
+    assign priority = 'high'
+  endif
+
+  assign frames = product.images | slice: 0, 5
+  assign frame_count = frames | size
+  assign scroll_on = false
+  if settings.card_hover_scroll and frame_count > 1
+    assign scroll_on = true
+  endif
+-%}
+
+<article class="card reveal{% if scroll_on %} card--scroll{% endif %}" {% if scroll_on %}data-card{% endif %}>
+  <a
+    class="card__media"
+    href="{{ product.url }}"
+    {% if scroll_on %}data-card-media aria-describedby="CardHint-{{ product.id }}"{% endif %}>
+
+    {%- if frame_count > 0 -%}
+      <div class="card__track" data-card-track style="--frames: {{ frame_count }}">
+        {%- for image in frames -%}
+          <img
+            class="card__frame"
+            src="{{ image | image_url: width: 700 }}"
+            srcset="{{ image | image_url: width: 300 }} 300w,
+                    {{ image | image_url: width: 500 }} 500w,
+                    {{ image | image_url: width: 700 }} 700w,
+                    {{ image | image_url: width: 1000 }} 1000w"
+            sizes="(max-width: 599px) 46vw, (max-width: 1023px) 31vw, 23vw"
+            alt="{% if forloop.first %}{{ image.alt | default: product.title | escape }}{% endif %}"
+            width="{{ image.width }}"
+            height="{{ image.height }}"
+            loading="{% if forloop.first %}{{ loading }}{% else %}lazy{% endif %}"
+            {% if forloop.first %}fetchpriority="{{ priority }}"{% endif %}
+            {% unless forloop.first %}aria-hidden="true"{% endunless %}>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'card__frame' }}
+    {%- endif -%}
+
+    <div class="card__badges">
+      {%- if product.available == false -%}
+        <span class="badge badge--soldout">{{ 'products.sold_out' | t }}</span>
+      {%- else -%}
+        {%- if on_sale -%}<span class="badge badge--sale">-{{ saved }}%</span>{%- endif -%}
+        {%- if is_new -%}<span class="badge badge--new">{{ 'products.new' | t }}</span>{%- endif -%}
+      {%- endif -%}
+    </div>
+
+    {%- if scroll_on -%}
+      {%- comment -%} Progress segments double as an affordance: they tell you more photos exist. {%- endcomment -%}
+      <div class="card__progress" data-card-progress aria-hidden="true">
+        {%- for image in frames -%}
+          <span class="card__progress-seg{% if forloop.first %} is-on{% endif %}"></span>
+        {%- endfor -%}
+      </div>
+
+      <span class="card__hint" id="CardHint-{{ product.id }}">
+        {{ 'products.browse_photos' | t: count: frame_count }}
+      </span>
+    {%- endif -%}
+  </a>
+
+  <div class="card__body">
+    {%- if settings.card_show_vendor and product.vendor != blank -%}
+      <p class="card__vendor">{{ product.vendor }}</p>
+    {%- endif -%}
+
+    <h3 class="card__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+
+    {%- assign subtitle = product.metafields.custom.subtitle -%}
+    {%- if subtitle != blank -%}
+      <p class="card__sub">{{ subtitle }}</p>
+    {%- endif -%}
+
+    <div class="card__price">
+      {% render 'price', product: product %}
+    </div>
+
+    {%- if show_swatches -%}
+      {%- for option in product.options_with_values -%}
+        {%- assign dn = option.name | downcase -%}
+        {%- if dn contains 'coul' or dn contains 'colour' or dn contains 'color' or dn contains 'لون' -%}
+          <div class="swatches">
+            {%- for value in option.values limit: 5 -%}
+              {%- assign dot = '' -%}
+              {%- if value.swatch.color -%}{%- assign dot = value.swatch.color -%}{%- endif -%}
+              {%- if dot != '' -%}
+                <span class="swatch" style="background: {{ dot }};" title="{{ value | escape }}"></span>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  </div>
+</article>

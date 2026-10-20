@@ -1,0 +1,62 @@
+{
+  "name": "Footer",
+  "type": "footer",
+  "sections": {
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {}
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "about": {
+          "type": "about",
+          "settings": {}
+        },
+        "col1": {
+          "type": "menu",
+          "settings": {
+            "heading": "",
+            "menu": "footer-2"
+          }
+        },
+        "col2": {
+          "type": "menu",
+          "settings": {
+            "heading": "",
+            "menu": "footer-3"
+          }
+        },
+        "col3": {
+          "type": "menu",
+          "settings": {
+            "heading": "",
+            "menu": "footer-4"
+          }
+        },
+        "col4": {
+          "type": "text",
+          "settings": {
+            "heading": "",
+            "text": ""
+          }
+        }
+      },
+      "block_order": [
+        "about",
+        "col1",
+        "col2",
+        "col3",
+        "col4"
+      ],
+      "settings": {
+        "payment_labels": "",
+        "legal_menu": "footer-4"
+      }
+    }
+  },
+  "order": [
+    "newsletter",
+    "footer"
+  ]
+}

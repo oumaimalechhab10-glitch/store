@@ -1,0 +1,49 @@
+{%- comment -%}
+  Theme block: a paragraph of rich text.
+
+  Theme blocks live in blocks/ and can be reused by any section whose schema
+  accepts {"type": "@theme"}. Unlike a section block, the same file serves
+  every section, so a change here lands everywhere at once.
+
+  Used by: sections/rich-text.liquid
+{%- endcomment -%}
+
+{%- if block.settings.text != blank -%}
+  <div class="rte block-text"
+       style="margin-top:{{ block.settings.spacing }}px; text-align:{{ block.settings.alignment }}"
+       {{ block.shopify_attributes }}>
+    {{ block.settings.text }}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Text",
+  "settings": [
+    { "type": "richtext", "id": "text", "label": "Text" },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "default": "inherit",
+      "options": [
+        { "value": "inherit", "label": "Same as the section" },
+        { "value": "start", "label": "Start" },
+        { "value": "center", "label": "Centre" },
+        { "value": "end", "label": "End" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "label": "Space above",
+      "min": 0,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 18
+    }
+  ],
+  "presets": [{ "name": "Text" }]
+}
+{% endschema %}

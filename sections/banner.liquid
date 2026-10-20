@@ -1,0 +1,84 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+-%}
+{%- comment -%}
+  A full-bleed photograph used to break up rows of cards. Nothing is printed
+  over it: the heading exists for search engines and assistants only, which is
+  what keeps an image-led landing page readable to a machine.
+{%- endcomment -%}
+<section class="banner banner--{{ section.settings.ratio }}">
+  {%- if d_title != blank -%}<h2 class="visually-hidden">{{ d_title }}</h2>{%- endif -%}
+
+  {%- capture media -%}
+    {%- if section.settings.image -%}
+      <img
+        src="{{ section.settings.image | image_url: width: 2000 }}"
+        srcset="{{ section.settings.image | image_url: width: 750 }} 750w,
+                {{ section.settings.image | image_url: width: 1200 }} 1200w,
+                {{ section.settings.image | image_url: width: 1800 }} 1800w,
+                {{ section.settings.image | image_url: width: 2400 }} 2400w"
+        sizes="100vw"
+        alt="{{ section.settings.image.alt | default: d_title | escape }}"
+        loading="lazy"
+        width="{{ section.settings.image.width }}"
+        height="{{ section.settings.image.height }}"
+        style="object-position: {{ section.settings.focal_point }}">
+    {%- else -%}
+      {{ 'lifestyle-2' | placeholder_svg_tag }}
+    {%- endif -%}
+  {%- endcapture -%}
+
+  {%- if section.settings.link != blank -%}
+    <a class="banner__media" href="{{ section.settings.link }}"
+       {% if d_title != blank %}aria-label="{{ d_title | escape }}"{% endif %}>{{ media }}</a>
+  {%- else -%}
+    <div class="banner__media">{{ media }}</div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Image banner",
+  "class": "banner-section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "url", "id": "link", "label": "Link" },
+    { "type": "text", "id": "title", "label": "Hidden heading / alt text", "default": "", "info": "Not shown on the page. Used by search engines, assistants and screen readers." },
+    {
+      "type": "select",
+      "id": "ratio",
+      "label": "Shape",
+      "options": [
+        { "value": "wide", "label": "Wide" },
+        { "value": "standard", "label": "Standard" },
+        { "value": "tall", "label": "Panoramic on desktop" }
+      ],
+      "default": "wide"
+    },
+    {
+      "type": "select",
+      "id": "focal_point",
+      "label": "Focal point",
+      "options": [
+        { "value": "center center", "label": "Centre" },
+        { "value": "center top", "label": "Top" },
+        { "value": "center bottom", "label": "Bottom" }
+      ],
+      "default": "center center"
+    }
+  ],
+  "presets": [{ "name": "Image banner" }]
+}
+{% endschema %}

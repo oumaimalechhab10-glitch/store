@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}" dir="{% if request.locale.iso_code == 'ar' %}rtl{% else %}ltr{% endif %}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    {%- assign gc_value = gift_card.initial_value | money -%}
+    <title>{{ 'gift_cards.issued.title' | t: value: gc_value, shop: shop.name }}</title>
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+  </head>
+  <body class="template-gift-card">
+    <main class="section">
+      <div class="shell center">
+        <p class="eyebrow">{{ shop.name }}</p>
+        <h1 class="display-2" style="margin-top:12px">{{ gift_card.initial_value | money }}</h1>
+        <p class="lead" style="margin-top:10px">{{ 'gift_cards.issued.subtext' | t }}</p>
+
+        <div class="aside-card" style="max-width:420px; margin:30px auto 0">
+          <strong>{{ 'gift_cards.issued.code' | t }}</strong>
+          <p style="font-size:20px; letter-spacing:.14em; margin-top:10px">{{ gift_card.code | format_code }}</p>
+          {%- if gift_card.expires_on -%}
+            {%- assign gc_date = gift_card.expires_on | date: '%d.%m.%Y' -%}
+            <p class="small muted">{{ 'gift_cards.issued.expires' | t: date: gc_date }}</p>
+          {%- endif -%}
+          {%- unless gift_card.enabled -%}
+            <p class="form-status form-status--error" style="margin-top:14px">{{ 'gift_cards.issued.disabled' | t }}</p>
+          {%- endunless -%}
+        </div>
+
+        <a href="{{ shop.url }}" class="btn btn--dark" style="margin-top:26px">{{ 'gift_cards.issued.shop_link' | t }}</a>
+        <p class="small muted" style="margin-top:14px">{{ 'gift_cards.issued.note' | t }}</p>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,176 @@
+{%- comment -%} translated defaults {%- endcomment -%}
+{%- liquid
+  assign tkey = template.name
+  if template.suffix != blank
+    assign tkey = tkey | append: '_' | append: template.suffix
+  endif
+  assign ns = 'defaults.' | append: tkey | append: '_' | append: section.id
+  assign d_cta_label = section.settings.cta_label
+  if d_cta_label == blank
+    assign _t = ns | append: '.cta_label' | t
+    unless _t contains 'translation missing'
+      assign d_cta_label = _t
+    endunless
+  endif
+  assign d_eyebrow = section.settings.eyebrow
+  if d_eyebrow == blank
+    assign _t = ns | append: '.eyebrow' | t
+    unless _t contains 'translation missing'
+      assign d_eyebrow = _t
+    endunless
+  endif
+  assign d_text = section.settings.text
+  if d_text == blank
+    assign _t = ns | append: '.text' | t
+    unless _t contains 'translation missing'
+      assign d_text = _t
+    endunless
+  endif
+  assign d_title = section.settings.title
+  if d_title == blank
+    assign _t = ns | append: '.title' | t
+    unless _t contains 'translation missing'
+      assign d_title = _t
+    endunless
+  endif
+-%}
+{%- assign number = settings.whatsapp_number | remove: ' ' | remove: '+' | remove: '-' -%}
+
+<section class="section">
+  <div class="shell">
+    {%- if section.settings.layout == 'feature' -%}
+      <div class="split" style="align-items:center">
+        <div class="split__media" style="min-height:360px">
+          {%- if section.settings.image -%}
+            <img src="{{ section.settings.image | image_url: width: 1200 }}" alt="{{ d_title | escape }}" loading="lazy" width="{{ section.settings.image.width }}" height="{{ section.settings.image.height }}">
+          {%- else -%}
+            {{ 'lifestyle-1' | placeholder_svg_tag }}
+          {%- endif -%}
+        </div>
+        <div class="split__body">
+          {%- if d_eyebrow != blank -%}<p class="eyebrow">{{ d_eyebrow }}</p>{%- endif -%}
+          <h2>{{ d_title }}</h2>
+          {%- if d_text != blank -%}<div class="rte lead">{{ d_text }}</div>{%- endif -%}
+          <div class="stat-row">
+            <div class="stat"><strong>{{ section.blocks.size }}</strong><span>{{ 'stores.addresses' | t }}</span></div>
+            <div class="stat"><strong>2h</strong><span>{{ 'stores.click_collect' | t }}</span></div>
+            <div class="stat"><strong>7/7</strong><span>{{ 'stores.open' | t }}</span></div>
+          </div>
+          {%- if d_cta_label != blank -%}
+            <a href="{{ section.settings.cta_url }}" class="btn btn--dark">{{ d_cta_label }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+
+    {%- else -%}
+      <div class="section-head center">
+        {%- if d_eyebrow != blank -%}<p class="eyebrow">{{ d_eyebrow }}</p>{%- endif -%}
+        <h2 class="section-title" style="margin-top:12px">{{ d_title }}</h2>
+        {%- if d_text != blank -%}<div class="rte" style="max-width:62ch;margin:14px auto 0">{{ d_text }}</div>{%- endif -%}
+      </div>
+
+      <div class="store-grid">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign bns = ns | append: '.' | append: forloop.index
+            assign db_address = block.settings.address
+            if db_address == blank
+              assign _t = bns | append: '_address' | t
+              unless _t contains 'translation missing'
+                assign db_address = _t
+              endunless
+            endif
+            assign db_city = block.settings.city
+            if db_city == blank
+              assign _t = bns | append: '_city' | t
+              unless _t contains 'translation missing'
+                assign db_city = _t
+              endunless
+            endif
+            assign db_hours = block.settings.hours
+            if db_hours == blank
+              assign _t = bns | append: '_hours' | t
+              unless _t contains 'translation missing'
+                assign db_hours = _t
+              endunless
+            endif
+            assign db_name = block.settings.name
+            if db_name == blank
+              assign _t = bns | append: '_name' | t
+              unless _t contains 'translation missing'
+                assign db_name = _t
+              endunless
+            endif
+          -%}
+          <article class="store-card reveal" {{ block.shopify_attributes }}>
+            <div style="display:flex; gap:12px; align-items:flex-start">
+              <span style="color:var(--c-gold); flex:none; margin-top:2px">{% render 'icon', icon: 'pin', size: 20 %}</span>
+              <div>
+                <h3>{{ db_name }}</h3>
+                <p class="store-card__city">{{ db_city }}</p>
+              </div>
+            </div>
+            <address>{{ db_address }}<br>{{ db_city }}, {{ 'general.morocco' | t }}</address>
+            {%- if db_hours != blank -%}<p class="store-card__hours">{{ db_hours }}</p>{%- endif -%}
+            <div class="store-card__actions">
+              {%- if number != blank -%}
+                <a class="btn btn--wa btn--sm" target="_blank" rel="noopener nofollow"
+                   href="https://wa.me/{{ number }}?text={{ 'whatsapp.store_message' | t: city: block.settings.city | url_encode }}">
+                  {% render 'icon', icon: 'whatsapp', size: 14 %} {{ 'stores.book' | t }}
+                </a>
+              {%- endif -%}
+              {%- if block.settings.map_link != blank -%}
+                <a class="btn btn--outline btn--sm" href="{{ block.settings.map_link }}" target="_blank" rel="noopener nofollow">{{ 'stores.directions' | t }}</a>
+              {%- endif -%}
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Store locations",
+  "class": "stores-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "feature", "label": "Photo + highlights (home page)" },
+        { "value": "grid", "label": "Address grid (store page)" }
+      ],
+      "default": "feature"
+    },
+    { "type": "image_picker", "id": "image", "label": "Photo" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "" },
+    { "type": "text", "id": "title", "label": "Heading", "default": "" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "text", "id": "cta_label", "label": "Button", "default": "" },
+    { "type": "url", "id": "cta_url", "label": "Button link" }
+  ],
+  "blocks": [
+    {
+      "type": "store",
+      "name": "Store",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Name", "default": "" },
+        { "type": "text", "id": "city", "label": "City", "default": "" },
+        { "type": "text", "id": "address", "label": "Address" },
+        { "type": "text", "id": "hours", "label": "Opening hours", "default": "" },
+        { "type": "url", "id": "map_link", "label": "Google Maps link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Store locations",
+      "blocks": [{ "type": "store" }, { "type": "store" }, { "type": "store" }]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,493 @@
+{
+  "general": {
+    "home": "Home",
+    "search": "Search",
+    "search_placeholder": "Necklaces, rings, bracelets…",
+    "search_results_count": {
+      "one": "{{ count }} result for “{{ terms }}”",
+      "other": "{{ count }} results for “{{ terms }}”"
+    },
+    "search_no_results": "No results for “{{ terms }}”",
+    "search_no_results_text": "Check the spelling or browse the shop. Our team also answers on WhatsApp.",
+    "popular_searches": "Popular searches",
+    "menu": "Menu",
+    "stores": "Stores",
+    "view_all": "View all",
+    "previous": "Previous",
+    "next": "Next",
+    "morocco": "Morocco",
+    "morocco_only": "We deliver within Morocco only",
+    "error_404": "Error 404",
+    "not_found_title": "This page no longer exists",
+    "not_found_text": "The link may be wrong, or the piece has moved to our archive.",
+    "meta": {
+      "tags": "Filtered by {{ tags }}",
+      "page": "Page {{ page }}"
+    },
+    "change_language": "Change language",
+    "toggle_scheme": "Switch between light and dark",
+    "consent_title": "Measurement preferences",
+    "consent_text": "We use third-party measurement tools to understand what interests our visitors. You may decline: the site works exactly the same either way.",
+    "consent_accept": "Accept",
+    "consent_decline": "Decline",
+    "coming_soon": "Coming soon",
+    "not_found": "Page not found"
+  },
+  "accessibility": {
+    "skip_to_content": "Skip to content",
+    "close": "Close",
+    "open_menu": "Open menu",
+    "primary_navigation": "Primary navigation",
+    "breadcrumbs": "Breadcrumbs",
+    "pagination": "Pagination"
+  },
+  "customer": {
+    "account": "Account"
+  },
+  "products": {
+    "sold_out": "Sold out",
+    "in_stock": "In stock",
+    "unavailable": "Unavailable",
+    "add_to_cart": "Add to bag",
+    "choose_options": "Choose options",
+    "new": "New",
+    "from_price": "From {{ price }}",
+    "quantity": "Quantity",
+    "sku": "SKU",
+    "reference": "Reference",
+    "material": "Material",
+    "weight": "Weight",
+    "size_guide": "Size guide",
+    "description": "Description",
+    "features": "Details",
+    "care": "Care",
+    "delivery": "Delivery",
+    "delivery_value": "24 to 48h within Morocco",
+    "payment": "Payment",
+    "payment_value": "Cash on delivery or online",
+    "ships_to": "Ships to",
+    "reassurance_delivery": "Delivery in 24-48h across Morocco",
+    "reassurance_cod": "Cash on delivery",
+    "reassurance_warranty": "{{ months }}-month warranty",
+    "reassurance_returns": "{{ days }}-day returns",
+    "browse_photos": {
+      "one": "1 photo",
+      "other": "{{ count }} photos, hover to scroll through them"
+    },
+    "cta_note": "Pay on delivery · Exchange within {{ days }} days",
+    "or": "or order directly",
+    "buy_now": "Order now"
+  },
+  "collections": {
+    "all": "Shop all",
+    "eyebrow": "Collection",
+    "product_count": {
+      "one": "{{ count }} piece",
+      "other": "{{ count }} pieces"
+    },
+    "showing": {
+      "one": "{{ count }} piece shown",
+      "other": "{{ count }} pieces shown"
+    },
+    "filters": "Filter",
+    "sort": "Sort by",
+    "apply": "Apply",
+    "clear": "Clear all",
+    "min": "Min",
+    "max": "Max",
+    "empty_title": "Nothing matches those filters",
+    "empty_text": "Try removing a filter, or message us on WhatsApp and we will find the piece for you.",
+    "all_collections": "Collections",
+    "soon_title": "Coming soon",
+    "soon_text": "This family is not in stock yet. Message us on WhatsApp and we will tell you the moment it lands.",
+    "soon_cta": "Tell me on WhatsApp",
+    "soon_message": "Hello, I would like to be told when {{ family }} are available."
+  },
+  "cart": {
+    "title": "Cart",
+    "count": {
+      "one": "{{ count }} item",
+      "other": "{{ count }} items"
+    },
+    "empty": "Your cart is empty",
+    "empty_text": "The “You” set is waiting for you.",
+    "added": "Added to cart",
+    "continue_shopping": "Continue shopping",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "free": "Free",
+    "checkout": "Check out online",
+    "view_cart": "View cart",
+    "remove": "Remove",
+    "quantity": "Quantity",
+    "increase": "Increase quantity",
+    "decrease": "Decrease quantity",
+    "note": "Delivery instructions",
+    "note_placeholder": "Floor, landmark, preferred time…",
+    "taxes_note": "Shipping calculated at the next step. VAT included.",
+    "free_shipping_remaining_html": "{{ amount }} away from free delivery",
+    "free_shipping_reached": "Free delivery unlocked",
+    "checkout_note": "Secure payment · 24-48h delivery in Morocco"
+  },
+  "whatsapp": {
+    "contact_us": "Message us on WhatsApp",
+    "chat_now": "Start the conversation",
+    "fab_message": "Hello {{ shop }}, I have a question about your jewelry.",
+    "question_message": "Hello, I have a question before ordering.",
+    "store_message": "Hello, I would like to reserve a piece at your {{ city }} store."
+  },
+  "stores": {
+    "addresses": "Addresses",
+    "click_collect": "Click & collect",
+    "open": "Open",
+    "book": "Reserve",
+    "directions": "Directions"
+  },
+  "faq": {
+    "need_help": "Need help?",
+    "help_text": "Our team replies in under an hour, seven days a week, straight on WhatsApp."
+  },
+  "newsletter": {
+    "placeholder": "Your e-mail address",
+    "success": "Thank you, your subscription is confirmed."
+  },
+  "ai": {
+    "payment_accepted": "Cash on delivery and online payment. Orders can be placed on WhatsApp without an account. Delivery within Morocco only."
+  },
+  "onboarding": {
+    "product_title": "Product name"
+  },
+  "defaults": {
+    "404_main": {
+      "title": "Our most wanted pieces"
+    },
+    "blog_main": {
+      "eyebrow": "Journal",
+      "empty_text": "The first articles are coming soon."
+    },
+    "collection_discover": {
+      "title": "Keep exploring"
+    },
+    "index_hero": {
+      "eyebrow": "The piece of the season",
+      "title": "The “You” ring, set of 4",
+      "text": "Four coordinated rings in one box: an oval solitaire, a set crown, a slim band and a smooth wide ring. Worn together or apart.",
+      "cta_label": "Discover the set",
+      "cta2_label": ""
+    },
+    "index_usp": {
+      "1_title": "Free delivery",
+      "1_text": "Across Morocco",
+      "2_title": "Cash on delivery",
+      "2_text": "Check it first",
+      "3_title": "14-day returns",
+      "3_text": "Unworn piece"
+    },
+    "index_featured": {
+      "eyebrow": "",
+      "title": "Our jewelry",
+      "subtitle": "",
+      "cta_label": ""
+    },
+    "index_mosaic": {
+      "1_eyebrow": "",
+      "1_title": "Together",
+      "1_cta": "Discover",
+      "2_eyebrow": "",
+      "2_title": "Or apart",
+      "2_cta": "Discover",
+      "3_eyebrow": "",
+      "3_title": "Ready to gift",
+      "3_cta": "Discover"
+    },
+    "list_collections_main": {
+      "text": "<p>All our product families, from the solitaire to the chronograph watch.</p>"
+    },
+    "page_about_intro": {
+      "eyebrow": "The house"
+    },
+    "page_about_split": {
+      "eyebrow": "Our story",
+      "title": "Born in a Casablanca workshop",
+      "text": "<p>EmmaLux was born from the idea that a beautiful jewel should not sleep in a safe. We design pieces to be worn every day, at a fair price.</p>",
+      "1_label": "Founded in Casablanca",
+      "2_label": "Shops",
+      "3_label": "Customers",
+      "cta_label": "Our materials",
+      "4_label": "Shops",
+      "5_label": "Shops",
+      "6_label": "Shops",
+      "7_label": "Shops",
+      "8_label": "Shops"
+    },
+    "page_about_quote": {
+      "quote": "A jewel should not be saved for special occasions.",
+      "author": "Emma, founder"
+    },
+    "page_contact_intro": {
+      "eyebrow": "Customer service"
+    },
+    "page_contact_form": {
+      "eyebrow": "Contact",
+      "title": "Write to us",
+      "text": "<p>A question about a piece, a size or a delivery? We answer within 24 hours, and in under an hour on WhatsApp.</p>",
+      "label_name": "Name",
+      "label_phone": "Phone",
+      "label_email": "Email",
+      "label_message": "Message",
+      "button_label": "Send",
+      "success_message": "Thank you, your message has been received. We will get back to you very soon.",
+      "privacy_note": "Your data is used only to answer your request.",
+      "whatsapp_note": "For an immediate answer, write to us directly. We reply 7 days a week."
+    },
+    "page_contact_faq": {
+      "title": "Before you write",
+      "1_question": "How long until I get an answer?",
+      "1_answer": "<p>Under an hour on WhatsApp, 24 hours by email, seven days a week.</p>",
+      "2_question": "Can I change an order I already placed?",
+      "2_answer": "<p>Yes, as long as it has not shipped. Write to us with your order number.</p>",
+      "3_question": "Do I need an account to order?",
+      "4_question": "Do I need an account to order?",
+      "5_question": "Do I need an account to order?",
+      "6_question": "Do I need an account to order?",
+      "7_question": "Do I need an account to order?",
+      "8_question": "Do I need an account to order?",
+      "3_answer": "<p>No. You fill in the order form or use the online checkout, without creating an account.</p>",
+      "4_answer": "<p>No. You fill in the order form or use the online checkout, without creating an account.</p>",
+      "5_answer": "<p>No. You fill in the order form or use the online checkout, without creating an account.</p>",
+      "6_answer": "<p>No. You fill in the order form or use the online checkout, without creating an account.</p>",
+      "7_answer": "<p>No. You fill in the order form or use the online checkout, without creating an account.</p>",
+      "8_answer": "<p>No. You fill in the order form or use the online checkout, without creating an account.</p>"
+    },
+    "page_faq_intro": {
+      "eyebrow": "Help"
+    },
+    "page_faq_faq": {
+      "title": "All the answers",
+      "1_question": "Do I need an account to order?",
+      "1_answer": "<p>No. You fill in the order form (name, phone, city, address) or go through the online checkout. No account is required.</p>",
+      "2_question": "What are the delivery times?",
+      "2_answer": "<p>24 to 48 hours in the major cities, 48 to 72 hours elsewhere in Morocco. We deliver only within Morocco.</p>",
+      "3_question": "Can I pay on delivery?",
+      "3_answer": "<p>Yes, in cash to the courier, everywhere in Morocco. Online payment remains available at checkout.</p>",
+      "4_question": "How do I find my ring size?",
+      "4_answer": "<p>Measure your finger with a thread, then check the length against our size guide. If in doubt, send us the measurement on WhatsApp.</p>",
+      "5_question": "Can the jewelry get wet?",
+      "5_answer": "<p>Yes. Three-micron gold-plated 316L steel withstands the shower, the sea and perspiration. Just avoid direct contact with perfume.</p>",
+      "6_question": "How do I make a return?",
+      "6_answer": "<p>Write to us within 14 days. We arrange the return; the piece must be unworn and in its box.</p>",
+      "7_question": "Do I need an account to order?",
+      "8_question": "Do I need an account to order?",
+      "7_answer": "<p>No. You fill in the order form or use the online checkout, without creating an account.</p>",
+      "8_answer": "<p>No. You fill in the order form or use the online checkout, without creating an account.</p>"
+    },
+    "page_stores_intro": {
+      "eyebrow": "Points of sale"
+    },
+    "page_stores_stores": {
+      "eyebrow": "Our addresses",
+      "title": "Six shops in Morocco",
+      "text": "<p>Reserve a piece on WhatsApp and try it on in store within two hours.</p>",
+      "1_name": "EmmaLux Anfa",
+      "1_city": "Casablanca",
+      "1_address": "Boulevard d’Anfa, Yasmine residence",
+      "1_hours": "Mon – Sun: 9am – 9pm",
+      "2_name": "EmmaLux Agdal",
+      "2_city": "Rabat",
+      "2_address": "Avenue Fal Ould Oumeir",
+      "2_hours": "Mon – Sun: 9am – 9pm",
+      "3_name": "EmmaLux Guéliz",
+      "3_city": "Marrakech",
+      "3_address": "Rue de la Liberté",
+      "3_hours": "Mon – Sun: 10am – 9pm",
+      "4_name": "EmmaLux Malabata",
+      "4_city": "Tangier",
+      "4_address": "Avenue Mohammed VI",
+      "4_hours": "Mon – Sun: 10am – 9pm",
+      "5_name": "EmmaLux Fez",
+      "5_city": "Fez",
+      "5_address": "Avenue Hassan II",
+      "5_hours": "Mon – Sat: 10am – 8pm",
+      "6_name": "EmmaLux Founty",
+      "6_city": "Agadir",
+      "6_address": "Founty district, Palm Bay",
+      "6_hours": "Mon – Sat: 10am – 8pm",
+      "cta_label": "See the addresses",
+      "7_name": "EmmaLux Casablanca",
+      "8_name": "EmmaLux Casablanca",
+      "7_city": "Casablanca",
+      "8_city": "Casablanca",
+      "7_hours": "Mon – Sun: 9am – 9pm",
+      "8_hours": "Mon – Sun: 9am – 9pm"
+    },
+    "password_main": {
+      "eyebrow": "Coming soon",
+      "title": "EmmaLux opens very soon",
+      "text": "<p>Jewelry and watchmaking, delivered anywhere in Morocco. Leave us your email and you will be the first to know.</p>"
+    },
+    "product_main": {
+      "1_title": "Delivery & returns",
+      "1_content": "<p>Delivery within 24 to 48 hours everywhere in Morocco. Cash on delivery accepted. Returns and exchanges within 14 days, piece unworn and in its box.</p>",
+      "2_title": "Delivery & returns",
+      "3_title": "Delivery & returns",
+      "4_title": "Delivery & returns",
+      "5_title": "Delivery & returns",
+      "6_title": "Delivery & returns",
+      "7_title": "Delivery & returns",
+      "8_title": "Delivery & returns",
+      "2_content": "<p>Delivery within 24 to 48 hours everywhere in Morocco. Returns accepted within 14 days.</p>",
+      "3_content": "<p>Delivery within 24 to 48 hours everywhere in Morocco. Returns accepted within 14 days.</p>",
+      "4_content": "<p>Delivery within 24 to 48 hours everywhere in Morocco. Returns accepted within 14 days.</p>",
+      "5_content": "<p>Delivery within 24 to 48 hours everywhere in Morocco. Returns accepted within 14 days.</p>",
+      "6_content": "<p>Delivery within 24 to 48 hours everywhere in Morocco. Returns accepted within 14 days.</p>",
+      "7_content": "<p>Delivery within 24 to 48 hours everywhere in Morocco. Returns accepted within 14 days.</p>",
+      "8_content": "<p>Delivery within 24 to 48 hours everywhere in Morocco. Returns accepted within 14 days.</p>"
+    },
+    "product_related": {
+      "title": "You may also like"
+    },
+    "chrome_footer": {
+      "payment_labels": "Cash on delivery, Free delivery, 14-day returns, 12-month warranty",
+      "2_heading": "Shop",
+      "3_heading": "Shop",
+      "4_heading": "Shop",
+      "5_heading": "Shop",
+      "5_text": "The “You” set: four coordinated rings, delivered free everywhere in Morocco.",
+      "1_text": "The “You” set: four coordinated rings, delivered free everywhere in Morocco.",
+      "2_text": "The “You” set: four coordinated rings, delivered free everywhere in Morocco.",
+      "3_text": "The “You” set: four coordinated rings, delivered free everywhere in Morocco.",
+      "4_text": "The “You” set: four coordinated rings, delivered free everywhere in Morocco.",
+      "6_text": "The “You” set: four coordinated rings, delivered free everywhere in Morocco.",
+      "7_text": "The “You” set: four coordinated rings, delivered free everywhere in Morocco.",
+      "8_text": "The “You” set: four coordinated rings, delivered free everywhere in Morocco.",
+      "1_heading": "Shop",
+      "6_heading": "Shop",
+      "7_heading": "Shop",
+      "8_heading": "Shop"
+    },
+    "chrome_announcement": {
+      "1_text": "Free delivery across Morocco · Cash on delivery",
+      "2_text": "Set of 4 rings · Gift box with every order",
+      "3_text": "Set of 4 rings · Gift box with every order",
+      "4_text": "Set of 4 rings · Gift box with every order",
+      "5_text": "Set of 4 rings · Gift box with every order",
+      "6_text": "Set of 4 rings · Gift box with every order",
+      "7_text": "Set of 4 rings · Gift box with every order",
+      "8_text": "Set of 4 rings · Gift box with every order"
+    },
+    "chrome_header": {
+      "baseline": "The “You” ring",
+      "highlight_text": "",
+      "search_suggestions": "Necklaces, Rings, Bracelets, Sets",
+      "1_menu_title": "Our jewelry",
+      "1_image_caption": "The “You” set"
+    },
+    "page_ai_main": {
+      "eyebrow": "For AI assistants",
+      "title": "AI-readable information sheet",
+      "heading_facts": "Verified facts",
+      "heading_catalog": "Catalogue",
+      "heading_endpoints": "Structured data",
+      "heading_usage": "Citation terms",
+      "label_hours": "Opening hours",
+      "label_currency": "Currency",
+      "text_products_json": "full catalogue in JSON format",
+      "text_sitemap": "all public URLs",
+      "text_robots": "crawl rules, GPTBot and ClaudeBot allowed",
+      "text_whatsapp": "ordering channel, no account required",
+      "text_usage": "This information may be quoted and summarised freely, provided the source is credited and no price, stock level or delivery time is invented."
+    },
+    "chrome_newsletter": {
+      "eyebrow": "Newsletter",
+      "title": "Stay in the loop",
+      "text": "New arrivals, private sales and care tips. One email a month, no more.",
+      "button_label": "Sign me up",
+      "note": "Unsubscribe in one click. Your data is never resold."
+    },
+    "index_marquee": {
+      "text": "Free delivery · Cash on delivery · Gift box included"
+    },
+    "index_banner": {
+      "title": "The “You” set, worn"
+    },
+    "index_gallery": {
+      "title": "",
+      "1_alt": "The complete four-ring set",
+      "2_alt": "The rings up close",
+      "3_alt": "Our jewelry on white velvet",
+      "4_alt": "The pink gift box"
+    }
+  },
+  "order": {
+    "heading": "Complete your order",
+    "intro": "Fill in your details, then press the button. Everything is sent in a single WhatsApp message.",
+    "name": "Full name",
+    "name_ph": "Salma Bennani",
+    "phone": "Phone",
+    "city": "City",
+    "select_city": "Choose your city",
+    "address": "Delivery address",
+    "address_ph": "Street, building, floor, district",
+    "required_note": "Every field is required.",
+    "submit": "Confirm order",
+    "done": "Your order is registered",
+    "your_code": "Your order number",
+    "pay_on_delivery": "To pay on delivery:",
+    "secure": "No account, no online payment",
+    "err_phone": "Invalid Moroccan phone number (e.g. 06 12 34 56 78).",
+    "free": "Free",
+    "cities": "الدار البيضاء|Casablanca,الرباط|Rabat,مراكش|Marrakech,طنجة|Tanger,فاس|Fès,أكادير|Agadir,مكناس|Meknès,وجدة|Oujda,القنيطرة|Kénitra,تطوان|Tétouan,سلا|Salé,تمارة|Témara,آسفي|Safi,المحمدية|Mohammedia,الجديدة|El Jadida,بني ملال|Béni Mellal,الناظور|Nador,خريبكة|Khouribga,سطات|Settat,برشيد|Berrechid,العرائش|Larache,القصر الكبير|Ksar El Kébir,الخميسات|Khémisset,كلميم|Guelmim,الرشيدية|Errachidia,الصويرة|Essaouira,ورزازات|Ouarzazate,الداخلة|Dakhla,العيون|Laâyoune,تازة|Taza,تارودانت|Taroudant,الحسيمة|Al Hoceïma,شفشاون|Chefchaouen,إفران|Ifrane,سيدي قاسم|Sidi Kacem,اليوسفية|Youssoufia",
+    "ordering": "Registering…",
+    "next": "Keep this number. We will call you shortly to confirm the order and the address.",
+    "contact": "Any question? Call us:",
+    "cta_short": "Order now",
+    "err_send": "The order could not be registered. Try again or call us.",
+    "track_wa": "Track my order on WhatsApp",
+    "track_msg": "Hello, I would like to track my order {{ ref }}.",
+    "err_wa": "Contact us on WhatsApp",
+    "err_wa_msg": "Hello, I could not register my order ({{ product }}). The form is not working."
+  },
+  "inquiry": {
+    "open": "Ask about this piece",
+    "heading": "Product inquiry",
+    "intro": "A question about this piece? Fill this in and we will reply. This is not an order. Nothing will be shipped.",
+    "product": "Product",
+    "quantity": "Desired quantity (optional)",
+    "email": "Email (optional)",
+    "message": "Your question or request",
+    "message_ph": "E.g. is another size available? How long is delivery to my city?",
+    "prefer": "How should we reach you?",
+    "by_phone": "Phone call",
+    "by_whatsapp": "WhatsApp",
+    "submit": "Send inquiry",
+    "required_note": "Fields marked * are required.",
+    "privacy": "Your details are copied into the shop’s private Google Sheet, used only to answer you.",
+    "done": "Your inquiry has reached us",
+    "your_ref": "Your inquiry reference",
+    "done_text": "We will reply shortly.",
+    "not_an_order": "Reminder: this is an inquiry, not an order. To buy, use the order form.",
+    "err_send": "We could not send your inquiry. Please try again, or call us.",
+    "close": "Close"
+  },
+  "reviews": {
+    "aria": "Rated {{ score }} out of {{ scale }}, based on {{ count }} reviews",
+    "heading": "Customer reviews",
+    "none": "No published review for this piece yet.",
+    "count": {
+      "one": "{{ count }} review",
+      "other": "{{ count }} reviews"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "{{ value }} gift card from {{ shop }}",
+      "subtext": "Gift card",
+      "code": "Code",
+      "expires": "Valid until {{ date }}",
+      "disabled": "This card is no longer active.",
+      "shop_link": "Use my card",
+      "note": "Usable at online checkout, delivery within Morocco."
+    }
+  }
+}

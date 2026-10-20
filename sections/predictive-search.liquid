@@ -1,0 +1,24 @@
+{%- comment -%}
+  Rendered on demand by theme.js through the Section Rendering API:
+  /search/suggest?q=…&section_id=predictive-search
+{%- endcomment -%}
+{%- if predictive_search.performed -%}
+  {%- if predictive_search.resources.products.size > 0 -%}
+    <div class="product-grid product-grid--4" data-predictive-results>
+      {%- for product in predictive_search.resources.products -%}
+        {% render 'product-card', product: product, index: forloop.index %}
+      {%- endfor -%}
+    </div>
+  {%- else -%}
+    <p class="small muted" data-predictive-results style="margin-top:22px">
+      {{ 'general.search_no_results' | t: terms: predictive_search.terms }}
+    </p>
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Predictive search",
+  "settings": []
+}
+{% endschema %}

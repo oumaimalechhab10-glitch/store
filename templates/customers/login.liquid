@@ -1,0 +1,35 @@
+<section class="section section--tight">
+  <div class="shell">
+    <div class="page-content page-content--narrow" style="max-width:460px">
+      <h1 class="display-3 center">{{ 'customer.account' | t }}</h1>
+      <p class="small muted center" style="margin-top:10px">Vous n’avez pas besoin de compte pour commander : WhatsApp ou paiement en ligne suffisent.</p>
+
+      {% form 'customer_login', class: 'contact-form', style: 'margin-top:28px' %}
+        {{ form.errors | default_errors }}
+        <div>
+          <label class="label" for="CustomerEmail">E-mail</label>
+          <input class="input" type="email" name="customer[email]" id="CustomerEmail" autocomplete="email" required>
+        </div>
+        {%- if form.password_needed -%}
+          <div>
+            <label class="label" for="CustomerPassword">Mot de passe</label>
+            <input class="input" type="password" name="customer[password]" id="CustomerPassword" autocomplete="current-password">
+          </div>
+        {%- endif -%}
+        <button type="submit" class="btn btn--dark btn--full">Se connecter</button>
+        <a href="{{ routes.account_register_url }}" class="btn btn--ghost btn--full">Créer un compte</a>
+      {% endform %}
+
+      {% form 'recover_customer_password', class: 'contact-form', style: 'margin-top:28px' %}
+        {%- if form.posted_successfully? -%}
+          <p class="form-status form-status--ok">Un e-mail de réinitialisation vient d’être envoyé.</p>
+        {%- endif -%}
+        <div>
+          <label class="label" for="RecoverEmail">Mot de passe oublié</label>
+          <input class="input" type="email" name="email" id="RecoverEmail" placeholder="E-mail">
+        </div>
+        <button type="submit" class="btn btn--outline btn--full">Réinitialiser</button>
+      {% endform %}
+    </div>
+  </div>
+</section>

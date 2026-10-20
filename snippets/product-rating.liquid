@@ -1,0 +1,32 @@
+{%- comment -%}
+  Star rating from the shop's real review data.
+
+  Shopify review apps (including the free Shopify Product Reviews successor
+  and most third parties) write to the standard metafields
+  `reviews.rating` and `reviews.rating_count`. We read those and nothing else:
+  with no app installed the metafields are empty and this snippet renders
+  nothing at all, rather than inventing a score.
+
+  Usage: {% render 'product-rating', product: product %}
+{%- endcomment -%}
+{%- liquid
+  assign r = product.metafields.reviews.rating.value
+  assign n = product.metafields.reviews.rating_count.value | default: 0
+-%}
+{%- if r != blank and n > 0 -%}
+  {%- assign score = r.rating | times: 1.0 -%}
+  {%- assign scale = r.scale_max | default: 5 -%}
+  <a class="rating" href="#reviews" aria-label="{{ 'reviews.aria' | t: score: score, scale: scale, count: n }}">
+    <span class="rating__stars" aria-hidden="true">
+      {%- for i in (1..scale) -%}
+        {%- if i <= score -%}
+          <span class="rating__star is-on">&#9733;</span>
+        {%- else -%}
+          <span class="rating__star">&#9733;</span>
+        {%- endif -%}
+      {%- endfor -%}
+    </span>
+    <span class="rating__value" dir="ltr">{{ score | round: 1 }}/{{ scale }}</span>
+    <span class="rating__count">({{ n }})</span>
+  </a>
+{%- endif -%}

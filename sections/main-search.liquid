@@ -1,0 +1,64 @@
+{%- paginate search.results by 24 -%}
+
+<section class="section section--tight">
+  <div class="shell">
+    <div class="section-head center">
+      <h1 class="display-2">{{ 'general.search' | t }}</h1>
+
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-page-form">
+        <input type="hidden" name="type" value="product,page,article">
+        <input
+          class="input"
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="{{ 'general.search_placeholder' | t }}"
+          aria-label="{{ 'general.search' | t }}">
+        <button type="submit" class="btn btn--dark">{{ 'general.search' | t }}</button>
+      </form>
+    </div>
+
+    {%- if search.performed -%}
+      {%- if search.results_count > 0 -%}
+        <p class="center small muted" style="margin-bottom:34px">
+          {{ 'general.search_results_count' | t: count: search.results_count, terms: search.terms }}
+        </p>
+
+        <div class="product-grid product-grid--4">
+          {%- for item in search.results -%}
+            {%- case item.object_type -%}
+              {%- when 'product' -%}
+                {% render 'product-card', product: item, index: forloop.index %}
+              {%- else -%}
+                <article class="card card--text">
+                  <div class="card__body">
+                    <p class="eyebrow">{{ item.object_type }}</p>
+                    <h3 class="card__title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+                    <p class="small muted">{{ item.content | strip_html | truncatewords: 24 }}</p>
+                  </div>
+                </article>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+
+        {% render 'pagination', paginate: paginate %}
+      {%- else -%}
+        <div class="empty-state">
+          <p class="display-3">{{ 'general.search_no_results' | t: terms: search.terms }}</p>
+          <p class="muted">{{ 'general.search_no_results_text' | t }}</p>
+          <a href="{{ routes.all_products_collection_url }}" class="btn btn--dark" style="margin-top:22px">{{ 'collections.all' | t }}</a>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Search results",
+  "class": "main-search-section",
+  "settings": []
+}
+{% endschema %}

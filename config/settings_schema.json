@@ -1,0 +1,385 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "EmmaLux",
+    "theme_version": "1.0.0",
+    "theme_author": "EmmaLux Jewelry",
+    "theme_documentation_url": "https://example.com/docs",
+    "theme_support_url": "https://example.com/support"
+  },
+  {
+    "name": "Brand & logo",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo",
+        "info": "Leave empty to use the shop name set in Shopify in the Cormorant serif."
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "32 × 32 px PNG."
+      },
+      {
+        "type": "image_picker",
+        "id": "social_share_image",
+        "label": "Social sharing image",
+        "info": "1200 × 630 px. Used by WhatsApp, Facebook and X previews."
+      },
+      {
+        "type": "select",
+        "id": "text_direction",
+        "label": "Text direction",
+        "options": [
+          {
+            "value": "auto",
+            "label": "Automatic (follows the language)"
+          },
+          {
+            "value": "ltr",
+            "label": "Force left to right"
+          },
+          {
+            "value": "rtl",
+            "label": "Force right to left"
+          }
+        ],
+        "default": "auto",
+        "info": "Auto follows the active language. Arabic switches the whole layout to right-to-left."
+      },
+      {
+        "type": "range",
+        "id": "page_width",
+        "label": "Maximum page width",
+        "min": 1200,
+        "max": 1800,
+        "step": 20,
+        "default": 1560,
+        "unit": "px"
+      },
+      {
+        "type": "range",
+        "id": "corner_radius",
+        "label": "Corner rounding",
+        "min": 0,
+        "max": 16,
+        "step": 2,
+        "default": 0,
+        "unit": "px",
+        "info": "0 keeps the sharp, editorial look."
+      }
+    ]
+  },
+  {
+    "name": "Colours",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "These feed CSS variables used across the whole theme. Keep the contrast strong: ink on ivory is the base pairing. The dark scheme is derived automatically from these values."
+      },
+      {
+        "type": "select",
+        "id": "color_scheme_default",
+        "label": "Default colour scheme",
+        "options": [
+          {
+            "value": "light",
+            "label": "Always light"
+          },
+          {
+            "value": "dark",
+            "label": "Always dark"
+          },
+          {
+            "value": "auto",
+            "label": "Follow the visitor's device"
+          }
+        ],
+        "default": "auto",
+        "info": "Visitors can still switch, and their choice is remembered."
+      },
+      {
+        "type": "checkbox",
+        "id": "show_scheme_toggle",
+        "label": "Show the light / dark switch in the header",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "color_ink",
+        "label": "Ink (titles, dark sections)",
+        "default": "#17120f"
+      },
+      {
+        "type": "color",
+        "id": "color_espresso",
+        "label": "Espresso (body text)",
+        "default": "#3a302a"
+      },
+      {
+        "type": "color",
+        "id": "color_cocoa",
+        "label": "Cocoa (secondary text)",
+        "default": "#4b3f38"
+      },
+      {
+        "type": "color",
+        "id": "color_gold",
+        "label": "Gold (accents, buttons)",
+        "default": "#b08d57"
+      },
+      {
+        "type": "color",
+        "id": "color_gold_soft",
+        "label": "Soft gold (eyebrows on dark)",
+        "default": "#d7bd92"
+      },
+      {
+        "type": "color",
+        "id": "color_ivory",
+        "label": "Ivory (page background)",
+        "default": "#faf7f3"
+      },
+      {
+        "type": "color",
+        "id": "color_bone",
+        "label": "Bone (alternate sections)",
+        "default": "#f4f1ec"
+      },
+      {
+        "type": "color",
+        "id": "color_wine",
+        "label": "Wine (sale badges)",
+        "default": "#7a2e3a"
+      }
+    ]
+  },
+  {
+    "name": "Orders & Google Sheet",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Customers can order without creating an account. Every product, the cart drawer and the cart page carry a WhatsApp button pre-filled with what they are looking at."
+      },
+      {
+        "type": "paragraph",
+        "content": "Two ways to take an order, and you can run either or both. 1) Shopify checkout, with the \"Order now\" button. 2) The order form on the product page, which writes a row to your Google Sheet. The order form appears only when the endpoint below is filled in, so clearing it leaves Shopify checkout alone."
+      },
+      {
+        "type": "checkbox",
+        "id": "show_buy_now",
+        "label": "Show the \"Order now\" button",
+        "default": true,
+        "info": "Adds the item and goes straight to Shopify checkout, where payment and the order record are handled by Shopify. Turn this off if you take orders only through the order form below."
+      },
+      {
+        "type": "text",
+        "id": "order_endpoint",
+        "label": "Google Sheet endpoint (Apps Script /exec URL)",
+        "default": "",
+        "info": "Every confirmed order is written as a row in your Google Sheet. Paste the Apps Script \"Web app\" deployment URL here. Leave empty to disable the order form."
+      },
+      {
+        "type": "text",
+        "id": "order_secret",
+        "label": "Google Sheet shared secret",
+        "default": "",
+        "info": "Must match the SECRET constant inside the Apps Script. Note: a theme has no server, so this value is readable by anyone who views the page source. It stops stray bots, it is not a lock. Leave both this and SECRET empty if that trade-off is not worth it."
+      },
+      {
+        "type": "text",
+        "id": "inquiry_endpoint",
+        "label": "Product inquiry endpoint (Apps Script /exec URL)",
+        "default": "",
+        "info": "Where the \"Ask about this piece\" form posts. Leave empty to reuse the order endpoint, and the script files inquiries in their own tab."
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_number",
+        "label": "WhatsApp number",
+        "default": "",
+        "info": "International format. Spaces, + and dashes are stripped automatically."
+      },
+      {
+        "type": "checkbox",
+        "id": "whatsapp_show_fab",
+        "label": "Show the floating WhatsApp button",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Shipping & service",
+    "settings": [
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping from (MAD)",
+        "default": 700,
+        "info": "Used by the progress meter in the cart. Set to 0 to hide it. Shipping rates themselves are configured in Shopify Settings → Shipping."
+      },
+      {
+        "type": "number",
+        "id": "flat_shipping_rate",
+        "label": "Flat shipping rate (MAD)",
+        "default": 39
+      },
+      {
+        "type": "number",
+        "id": "return_days",
+        "label": "Return window (days)",
+        "default": 14
+      },
+      {
+        "type": "number",
+        "id": "warranty_months",
+        "label": "Warranty (months)",
+        "default": 12
+      }
+    ]
+  },
+  {
+    "name": "Store information",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Published as structured data so Google, Apple Maps and AI assistants can read your address and opening hours."
+      },
+      {
+        "type": "text",
+        "id": "shop_street",
+        "label": "Street",
+        "default": ""
+      },
+      {
+        "type": "text",
+        "id": "shop_city",
+        "label": "City",
+        "default": ""
+      },
+      {
+        "type": "text",
+        "id": "shop_phone",
+        "label": "Phone",
+        "default": ""
+      },
+      {
+        "type": "text",
+        "id": "shop_email",
+        "label": "E-mail",
+        "default": ""
+      },
+      {
+        "type": "text",
+        "id": "opening_hours",
+        "label": "Opening hours",
+        "default": "",
+        "info": "Schema.org format, e.g. Mo-Sa 09:00-20:00."
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_instagram",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook",
+        "label": "Facebook"
+      },
+      {
+        "type": "url",
+        "id": "social_tiktok",
+        "label": "TikTok"
+      },
+      {
+        "type": "url",
+        "id": "social_pinterest",
+        "label": "Pinterest"
+      },
+      {
+        "type": "url",
+        "id": "social_youtube",
+        "label": "YouTube"
+      }
+    ]
+  },
+  {
+    "name": "Product cards",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "card_hover_scroll",
+        "label": "Scroll through photos on hover",
+        "default": true,
+        "info": "Resting the pointer on a product scrolls its photos. On phones the same strip becomes swipeable."
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_vendor",
+        "label": "Show vendor on cards",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "AI & discoverability",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "This theme exposes JSON-LD on every page, allows AI crawlers in robots.txt, and ships an /pages/ai page template you can publish as a machine-readable brief."
+      },
+      {
+        "type": "textarea",
+        "id": "ai_summary",
+        "label": "One-paragraph brief for AI assistants",
+        "default": "EmmaLux is a Moroccan fine jewelry and watch house. We sell rings, necklaces, bracelets, earrings and watches in 316L steel plated with 18-carat gold, delivered across Morocco in 24 to 48 hours with cash on delivery, a 14-day return window and a 12-month warranty. Orders can be placed on WhatsApp without creating an account, or through the online checkout."
+      }
+    ]
+  },
+  {
+    "name": "Mesure d’audience",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Trois couches indépendantes. Chacune reste éteinte tant que son champ est vide, et une installation neuve n’envoie rien nulle part. L’analytique native de Shopify (Admin → Analyses) fonctionne de toute façon, sans rien à régler ici."
+      },
+      {
+        "type": "header",
+        "content": "1. Mesure first-party (sans cookie)"
+      },
+      {
+        "type": "text",
+        "id": "beacon_url",
+        "label": "URL du collecteur",
+        "info": "URL de votre propre collecteur, par exemple https://example.com/api/track. Aucun cookie, aucun tiers, aucun bandeau de consentement requis. Laissez vide pour désactiver."
+      },
+      {
+        "type": "header",
+        "content": "2. Google Analytics 4"
+      },
+      {
+        "type": "text",
+        "id": "ga4_id",
+        "label": "ID de mesure GA4",
+        "info": "Format G-XXXXXXXXXX. Dépose des cookies : le bandeau de consentement s’affiche automatiquement."
+      },
+      {
+        "type": "header",
+        "content": "3. Meta Pixel"
+      },
+      {
+        "type": "text",
+        "id": "meta_pixel_id",
+        "label": "ID du Pixel Meta",
+        "info": "Identifiant numérique du pixel Facebook/Instagram. Dépose des cookies : soumis au même bandeau."
+      }
+    ]
+  }
+]
